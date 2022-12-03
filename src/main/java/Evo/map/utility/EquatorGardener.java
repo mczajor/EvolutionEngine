@@ -9,6 +9,7 @@ public class EquatorGardener extends AbstractGardener {
     }
     @Override
     public void plant() {
+        MoveVector dimensions = map.getDimensions();
         }
     }
 }

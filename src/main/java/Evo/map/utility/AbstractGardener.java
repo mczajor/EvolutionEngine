@@ -12,7 +12,7 @@ public abstract class AbstractGardener {
         MoveVector dimensions = map.getDimensions();
         return new MoveVector((int)(Math.random()*dimensions.x), (int)(Math.random()*dimensions.y));
     }
-    public void plant() {
-
+    public void plant(MoveVector position, Plant plant) {
+        map.plant(position, plant);
     }
 }

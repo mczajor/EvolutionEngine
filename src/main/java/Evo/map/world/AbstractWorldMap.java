@@ -20,6 +20,7 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     public MoveVector getDimensions(){
         return new MoveVector(this.width, this.height);
     }
+
     public boolean canMoveTo(MoveVector position){
         return position.x >= 0 && position.x < this.width && position.y >= 0 && position.y < this.height;
     }
@@ -28,6 +29,10 @@ public abstract class AbstractWorldMap implements IPositionObserver {
         if(this.mapAnimals.get(position) == null || this.mapAnimals.get(position).isEmpty())
             return this.mapPlants.get(position);
         return this.mapAnimals.get(position).get(0);
+    }
+
+    public void plant(MoveVector position, Plant plant){
+        this.mapPlants.put(position, plant);
     }
 
     public boolean place(Animal element){

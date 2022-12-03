@@ -8,7 +8,6 @@ public class Simulation {
     public static void main(String[] args){
         AbstractWorldMap map = new HellPortal(10, 10);
         MapVisualizer visualizer = new MapVisualizer(map);
-        map.generateGrass(10);
         Animal test = new Animal(new MoveVector(0,0), map);
         Animal test2 = new Animal(new MoveVector(1,1), map);
         Animal test3 = new Animal(new MoveVector(2,2), map);
