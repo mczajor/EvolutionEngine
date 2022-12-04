@@ -2,12 +2,10 @@ package Evo.map.utility;
 import Evo.map.world.AbstractWorldMap;
 
 public class NecrophobicGardener extends AbstractGardener {
-    public NecrophobicGardener(int width, int height, AbstractWorldMap map){
-        super(width, height, map);
+    public NecrophobicGardener(AbstractWorldMap map, int dim, int startingPlants, int plantEnergy){
+        super(map, dim, plantEnergy );
     }
-    @Override
-    public void plant() {
 
-    }
+    public void plant(int amount) {}
 }
 

@@ -9,14 +9,17 @@ public class Animal implements IMapElement {
     private final Genotype genotype;
     private int energy;
     private final ArrayList<IPositionObserver> observers = new ArrayList<>();
+    private int age;
+    private boolean isDead = false;
 
     //Contructor for initial animals
     public Animal(MoveVector position, IPositionObserver map, int startEnergy){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
-        observers.add(map);
+        this.observers.add(map);
         this.energy = startEnergy;
-        genotype = new Genotype();
+        this.genotype = new Genotype();
+        this.age = 0;
     }
     //Constructor for children of animals
     public Animal(MoveVector position, Animal parent1, Animal parent2){
@@ -26,7 +29,7 @@ public class Animal implements IMapElement {
     }
 
     @Override
-    public String toString(){ return this.orientation.toString(); }
+    public String toString(){ return ""+this.energy; }
     public MoveVector getPosition(){
         return this.position;
     }
@@ -46,6 +49,12 @@ public class Animal implements IMapElement {
     public void addEnergy(int energy){
         this.energy += energy;
     }
+    public boolean isDead(){
+        return this.isDead;
+    }
+    public void die(){
+        this.isDead = true;
+    }
     //Changes orientation of animal based on their genotype
     private void changeOrientation(){
         int gene = genotype.getGenotype()[(int)(Math.random() * 32)];
@@ -62,9 +71,11 @@ public class Animal implements IMapElement {
             observer.positionChanged(this, oldPosition, newPosition);
         }
     }
+
     public void  move(){
         changeOrientation();
         MoveVector nextMove = this.orientation.toUnitVector();
+        this.age++;
         this.positionChanged(this.position, this.position.add(nextMove));
     }
 

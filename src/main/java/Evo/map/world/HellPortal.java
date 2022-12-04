@@ -7,10 +7,11 @@ public class HellPortal extends AbstractWorldMap{
     }
     public void positionChanged(Animal animal, MoveVector oldPosition, MoveVector newPosition){
         if (newPosition.x > this.width-1 || newPosition.x < 0){
-            newPosition = new MoveVector((int)(Math.random()*this.width), newPosition.y);
+            newPosition = new MoveVector((int)(Math.random()*this.width), (int)(Math.random()*this.height));
         }
         if (newPosition.y > this.height-1 || newPosition.y < 0){
-            newPosition = new MoveVector(newPosition.x, (int)(Math.random()*this.height));
+            animal.turnAround();
+            newPosition = oldPosition;
         }
         animal.setPosition(newPosition);
         super.positionChanged(animal, oldPosition, newPosition);
