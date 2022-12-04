@@ -3,8 +3,8 @@ import Evo.map.elements.Animal;
 import Evo.map.elements.MoveVector;
 
 public class SphericalWorld extends AbstractWorldMap{
-    public SphericalWorld(int width, int height){
-        super(width, height);
+    public SphericalWorld(int width, int height, int energyLoss){
+        super(width, height, energyLoss);
     }
     public void positionChanged(Animal animal, MoveVector oldPosition, MoveVector newPosition){
         if (newPosition.x > this.width-1){

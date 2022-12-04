@@ -5,13 +5,8 @@ import Evo.map.world.AbstractWorldMap;
 
 import java.util.ArrayList;
 
-public class UnderTaker {
-    AbstractWorldMap map;
-    ArrayList<Animal> potentialyDeadAnimals;
-
+public class UnderTaker extends AbstractUnderTaker {
     public UnderTaker(AbstractWorldMap map){
-        this.map = map;
-    }
-    public void buryTheDead() {
+        super(map);
     }
 }

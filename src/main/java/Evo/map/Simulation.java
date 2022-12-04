@@ -6,20 +6,17 @@ import Evo.map.utility.*;
 public class Simulation {
 
     public static void main(String[] args){
-        AbstractWorldMap map = new HellPortal(10, 10);
+        AbstractWorldMap map = new HellPortal(100, 100, 10);
         MapVisualizer visualizer = new MapVisualizer(map);
-        Animal test = new Animal(new MoveVector(0,0), map);
-        Animal test2 = new Animal(new MoveVector(1,1), map);
-        Animal test3 = new Animal(new MoveVector(2,2), map);
-        Animal test4 = new Animal(new MoveVector(3,3), map);
+        AbstractGardener gardener = new EquatorGardener(100, 100, map);
+        Animal test = new Animal(new MoveVector(0,0), map, 100);
+
         map.place(test);
         for(int i = 0; i < 100; i++){
             test.move();
-            test2.move();
-            test3.move();
-            test4.move();
+            gardener.plant();
         }
-        System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(9,9)));
+        System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(99,99)));
 
     }
 }

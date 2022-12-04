@@ -11,10 +11,11 @@ public class Animal implements IMapElement {
     private final ArrayList<IPositionObserver> observers = new ArrayList<>();
 
     //Contructor for initial animals
-    public Animal(MoveVector position, IPositionObserver map){
+    public Animal(MoveVector position, IPositionObserver map, int startEnergy){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         observers.add(map);
+        this.energy = startEnergy;
         genotype = new Genotype();
     }
     //Constructor for children of animals
