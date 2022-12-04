@@ -1,10 +1,8 @@
 package Evo.map.world;
 import Evo.map.elements.*;
 import Evo.map.utility.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.*;
 
 public abstract class AbstractWorldMap implements IPositionObserver {
     protected final int width;
@@ -88,12 +86,16 @@ public abstract class AbstractWorldMap implements IPositionObserver {
             }
         }
     }
-    public void mingle(){
+    public List<Animal> mingle(){
+        List<Animal> children = new ArrayList<>();
         for(MoveVector key: this.mapAnimals.keySet()){
             if(this.mapAnimals.get(key).size() > 1){
                 this.mapAnimals.get(key).sort(Comparator.comparingInt(Animal::getEnergy));
-                this.mapAnimals.get(key).add(this.mapAnimals.get(key).get(0).reproduce(this.mapAnimals.get(key).get(1)));
+                Animal child = this.mapAnimals.get(key).get(0).reproduce(this.mapAnimals.get(key).get(1));
+                this.mapAnimals.get(key).add(child);
+                children.add(child);
             }
         }
+        return children;
     }
 }

@@ -5,6 +5,7 @@ import Evo.map.utility.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Simulation {
 
@@ -31,6 +32,7 @@ public class Simulation {
             for(Animal animal : animals){
                 animal.move();
             }
+            animals = Stream.concat(animals.stream(), map.mingle().stream()).toList();
             map.feast();
         }
         System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(19,19)));
