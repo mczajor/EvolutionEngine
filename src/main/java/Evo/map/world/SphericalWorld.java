@@ -13,7 +13,8 @@ public class SphericalWorld extends AbstractWorldMap{
             newPosition = new MoveVector(this.width-1, newPosition.y);
         }
         if (newPosition.y > this.height-1 || newPosition.y < 0){
-
+            animal.turnAround();
+            newPosition = oldPosition;
         }
         animal.setPosition(newPosition);
         super.positionChanged(animal, oldPosition, newPosition);

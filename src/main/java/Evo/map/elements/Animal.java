@@ -11,6 +11,7 @@ public class Animal implements IMapElement {
     private final ArrayList<IPositionObserver> observers = new ArrayList<>();
     private int age;
     private boolean isDead = false;
+    public final int status;
 
     //Contructor for initial animals
     public Animal(MoveVector position, IPositionObserver map, int startEnergy){
@@ -20,16 +21,18 @@ public class Animal implements IMapElement {
         this.energy = startEnergy;
         this.genotype = new Genotype();
         this.age = 0;
+        this.status = 0;
     }
     //Constructor for children of animals
     public Animal(MoveVector position, Animal parent1, Animal parent2){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         genotype = new Genotype(parent1, parent2);
+        this.status = (int)((parent1.status + parent2.status)/2 + 1);
     }
 
     @Override
-    public String toString(){ return ""+this.energy; }
+    public String toString(){ return ""+this.status; }
     public MoveVector getPosition(){
         return this.position;
     }

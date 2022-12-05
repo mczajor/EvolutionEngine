@@ -9,18 +9,24 @@ import java.util.Map;
 public abstract class AbstractGardener {
     AbstractWorldMap map;
     protected final int plantEnergy;
-    private Map<Integer, MoveVector> viablePositions;
-    protected final int dim;
-    public AbstractGardener(AbstractWorldMap map, int dim, int plantEnergy){
+    protected final int height;
+    protected final int width;
+    protected final Map<MoveVector, Plant> plantMap = new HashMap<>();
+
+    public AbstractGardener(AbstractWorldMap map, int width, int height, int plantEnergy){
         this.map = map;
-        viablePositions = new HashMap<>();
-        this.dim = dim;
+        this.width = width;
+        this.height = height;
         this.plantEnergy = plantEnergy;
 
+    }
+    public Plant plantAt(MoveVector position){
+        return plantMap.get(position);
     }
     public MoveVector generatePosition(){
         MoveVector dimensions = map.getDimensions();
         return new MoveVector((int)(Math.random()*dimensions.x), (int)(Math.random()*dimensions.y));
     }
     public void plant(int amount) {}
+    public void plantGotEaten(MoveVector position){}
 }

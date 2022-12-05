@@ -9,18 +9,20 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     protected final int height;
     /* Storing animals and Plants in different HashMaps because there can be multiple animals in one spot but only one plant*/
     protected final Map<MoveVector, ArrayList<Animal>> mapAnimals;
-    protected final Map<MoveVector, Plant> mapPlants;
     private AbstractUnderTaker undertaker;
+    private AbstractGardener gardener;
     private final int energyLossPerDay;
     public AbstractWorldMap(int width, int height, int energyLossPerDay){
         mapAnimals = new HashMap<>();
-        mapPlants = new HashMap<>();
         this.width = width;
         this.height = height;
         this.energyLossPerDay = energyLossPerDay;
     }
     public void addUnderTaker(AbstractUnderTaker undertaker){
         this.undertaker = undertaker;
+    }
+    public void addGardener(AbstractGardener gardener){
+        this.gardener = gardener;
     }
     public MoveVector getDimensions(){
         return new MoveVector(this.width, this.height);
@@ -32,15 +34,8 @@ public abstract class AbstractWorldMap implements IPositionObserver {
 
     public IMapElement objectAt(MoveVector position){
         if(this.mapAnimals.get(position) == null || this.mapAnimals.get(position).isEmpty())
-            return this.mapPlants.get(position);
+            return gardener.plantAt(position);
         return this.mapAnimals.get(position).get(0);
-    }
-    public boolean plantAt(MoveVector position){
-        return this.mapPlants.get(position) != null;
-    }
-
-    public void plant(MoveVector position, Plant plant){
-        this.mapPlants.put(position, plant);
     }
 
 
@@ -54,11 +49,16 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     }
 
     public boolean isOccupied(MoveVector vector){
-        return !(mapAnimals.get(vector) == null && mapPlants.get(vector) == null);
+        return !(mapAnimals.get(vector) == null && gardener.plantAt(vector) == null);
     }
 
     public void positionChanged(Animal movedElement, MoveVector oldPosition, MoveVector newPosition){
         movedElement.removeEnergy(this.energyLossPerDay);
+        if(movedElement.getEnergy() <= 0)
+            this.undertaker.addDyingAnimal(movedElement);
+        if(oldPosition.equals(newPosition)){
+            return;
+        }
         if (this.mapAnimals.get(oldPosition) != null) {
             this.mapAnimals.get(oldPosition).remove(movedElement);
             if (this.mapAnimals.get(oldPosition).isEmpty()) {
@@ -67,8 +67,6 @@ public abstract class AbstractWorldMap implements IPositionObserver {
         }
         this.mapAnimals.computeIfAbsent(newPosition, s -> new ArrayList<>());
         this.mapAnimals.get(newPosition).add(movedElement);
-        if(movedElement.getEnergy() <= 0)
-            this.undertaker.addDyingAnimal(movedElement);
     }
 
 
@@ -79,10 +77,10 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     }
     public void feast(){
         for(MoveVector key: this.mapAnimals.keySet()){
-            if(this.mapPlants.get(key) != null && !this.mapAnimals.get(key).isEmpty()){
+            if(this.gardener.plantAt(key) != null && !this.mapAnimals.get(key).isEmpty()){
                 Animal max = this.mapAnimals.get(key).stream().max(Comparator.comparingInt(Animal::getEnergy)).get();
-                max.addEnergy(this.mapPlants.get(key).getEnergy());
-                this.mapPlants.remove(key);
+                max.addEnergy(this.gardener.plantAt(key).getEnergy());
+                this.gardener.plantGotEaten(key);
             }
         }
     }
