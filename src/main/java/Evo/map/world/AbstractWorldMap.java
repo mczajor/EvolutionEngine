@@ -28,10 +28,6 @@ public abstract class AbstractWorldMap implements IPositionObserver {
         return new MoveVector(this.width, this.height);
     }
 
-    public boolean canMoveTo(MoveVector position){
-        return position.x >= 0 && position.x < this.width && position.y >= 0 && position.y < this.height;
-    }
-
     public IMapElement objectAt(MoveVector position){
         if(this.mapAnimals.get(position) == null || this.mapAnimals.get(position).isEmpty())
             return gardener.plantAt(position);
@@ -79,7 +75,7 @@ public abstract class AbstractWorldMap implements IPositionObserver {
         for(MoveVector key: this.mapAnimals.keySet()){
             if(this.gardener.plantAt(key) != null && !this.mapAnimals.get(key).isEmpty()){
                 Animal max = this.mapAnimals.get(key).stream().max(Comparator.comparingInt(Animal::getEnergy)).get();
-                max.addEnergy(this.gardener.plantAt(key).getEnergy());
+                max.eat(this.gardener.plantAt(key));
                 this.gardener.plantGotEaten(key);
             }
         }

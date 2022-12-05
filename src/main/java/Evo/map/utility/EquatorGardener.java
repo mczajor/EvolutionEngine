@@ -6,72 +6,54 @@ import Evo.map.world.AbstractWorldMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EquatorGardener extends AbstractGardener {
     private final int jungleLowerBorder;
     private final int jungleUpperBorder;
-    private final Map<Integer, ArrayList<Integer>> viableJunglePositions = new HashMap<>();
-    private final Map<Integer, ArrayList<Integer>> viableBarrenPositions = new HashMap<>();
+    private final Map<Integer, ArrayList<Integer>> viablePositions = new HashMap<>();
     public EquatorGardener(AbstractWorldMap map, int width, int height, int startingPlants, int plantEnergy){
         super(map, width, height, plantEnergy);
         this.jungleLowerBorder = (int)(height*0.5-(height*0.1));
         this.jungleUpperBorder = (int)(height*0.5+(height*0.1));
-        for (int i = jungleLowerBorder; i < jungleUpperBorder; i++){
-            this.viableJunglePositions.put(i, this.generateList(width));
-        }
-        for(int i = 0; i<jungleLowerBorder; i++){
-            this.viableBarrenPositions.put(i, this.generateList(width));
-        }
-        for(int i=jungleUpperBorder; i<height; i++){
-            this.viableBarrenPositions.put(i, this.generateList(width));
-        }
-
+        for (int i = 0; i<height; i++){
+            this.viablePositions.put(i, new ArrayList<>());
+            for(int j = 0; j<width; j++){
+                this.viablePositions.get(i).add(j);
+                }
+            }
         this.plant(startingPlants);
     }
 
-
-    private ArrayList<Integer> generateList(int width){
-        ArrayList<Integer> list = new ArrayList<>();
-        for(int i=0; i<width;i++){
-            list.add(i);
-        }
-        return list;
-    }
     public void plantGotEaten(MoveVector position){
         this.plantMap.remove(position);
-        if(position.x < this.jungleLowerBorder || position.x > this.jungleUpperBorder){
-             this.viableBarrenPositions.computeIfAbsent(position.x, s ->new ArrayList<Integer>());
-             this.viableBarrenPositions.get(position.x).add(position.y);
-        } else{
-            this.viableJunglePositions.computeIfAbsent(position.x, s -> new ArrayList<Integer>());
-            this.viableJunglePositions.get(position.x).add(position.y);
-        }
-
+        this.viablePositions.computeIfAbsent(position.x, k -> new ArrayList<>());
+        this.viablePositions.get(position.x).add(position.y);
     }
-    public MoveVector generate(Map<Integer, ArrayList<Integer>> map){
-        ArrayList<Integer> temp = new ArrayList<>(map.keySet());
-        if (temp.isEmpty()){
+
+    @Override
+    public MoveVector generatePosition(){
+        ArrayList<Integer> temp;
+        if(Math.random() <= 0.2){
+            temp = this.viablePositions.keySet().stream().filter(s -> s < this.jungleLowerBorder ||
+                    s > this.jungleUpperBorder).collect(Collectors.toCollection(ArrayList::new));
+        } else {
+            temp = this.viablePositions.keySet().stream().filter(s -> s >= this.jungleLowerBorder &&
+                    s <= this.jungleUpperBorder).collect(Collectors.toCollection(ArrayList::new));
+        }
+        if (temp.size() == 0){
             return null;
         }
-        int randomX = temp.get((int)(Math.random()*temp.size()));
-        temp = map.get(randomX);
-        Integer randomY = temp.get((int)(Math.random()*temp.size()));
-        map.get(randomX).remove(randomY);
-        if (map.get(randomX).isEmpty()){
-            map.remove(randomX);
+        int randomY = temp.get((int)(Math.random()*temp.size()));
+        temp = this.viablePositions.get(randomY);
+        Integer randomX = temp.get((int)(Math.random()*temp.size()));
+        this.viablePositions.get(randomY).remove(randomX);
+        if (this.viablePositions.get(randomY).isEmpty()){
+            this.viablePositions.remove(randomY);
         }
         return new MoveVector(randomX, randomY);
     }
-    @Override
-    public MoveVector generatePosition(){
-        double random = Math.random();
-        if(random < 0.8){
-            return this.generate(this.viableJunglePositions);
-        } else{
-            return this.generate(this.viableBarrenPositions);
-        }
 
-    }
     public void plant(int amount) {
         for(int i=0; i<amount; i++){
             MoveVector position = this.generatePosition();

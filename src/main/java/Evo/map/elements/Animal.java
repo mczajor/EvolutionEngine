@@ -28,7 +28,7 @@ public class Animal implements IMapElement {
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         genotype = new Genotype(parent1, parent2);
-        this.status = (int)((parent1.status + parent2.status)/2 + 1);
+        this.status = ((parent1.status + parent2.status)/2 + 1);
     }
 
     @Override

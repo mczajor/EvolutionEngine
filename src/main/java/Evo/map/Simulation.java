@@ -1,6 +1,7 @@
 package Evo.map;
+import Evo.map.elements.MoveVector;
 import Evo.map.world.*;
-import Evo.map.elements.*;
+import Evo.map.elements.Animal;
 import Evo.map.utility.*;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Simulation {
         run(width, height);
     }
     public static void run(int width, int height){
-        AbstractWorldMap map = new HellPortal(width, height, 5);
+        AbstractWorldMap map = new SphericalWorld(width, height, 5);
         MapVisualizer visualizer = new MapVisualizer(map);
         AbstractGardener gardener = new EquatorGardener(map, width, height, 50, 50);
         List<Animal> animals = new ArrayList<>();
@@ -24,11 +25,11 @@ public class Simulation {
         map.addGardener(gardener);
         for (int i = 0; i < 200; i++){
             Animal animal = new Animal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), map, 100);
-            animals.add(animal);
-            map.place(animal);
+            if(map.place(animal)){
+                animals.add(animal);
+            }
         }
         for(int i = 0; i < 1000; i++){
-            //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(19,19)));
             underTaker.buryTheDead();
             animals = animals.stream().filter(animal -> !animal.isDead()).toList();
             for(Animal animal : animals){

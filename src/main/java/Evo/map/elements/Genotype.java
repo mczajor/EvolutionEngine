@@ -1,7 +1,5 @@
 package Evo.map.elements;
 
-import java.util.Arrays;
-
 public class Genotype {
     private final int[] genes;
     private int currActive;
