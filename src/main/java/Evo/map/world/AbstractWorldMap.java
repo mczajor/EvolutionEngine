@@ -7,9 +7,11 @@ import java.util.*;
 public abstract class AbstractWorldMap implements IPositionObserver {
     protected final int width;
     protected final int height;
-    /* Storing animals and Plants in different HashMaps because there can be multiple animals in one spot but only one plant*/
+
     protected final Map<MoveVector, ArrayList<Animal>> mapAnimals;
+    //Undertaker kills and buries animals
     private AbstractUnderTaker undertaker;
+    //Gardener is responsible for all things plant related
     private AbstractGardener gardener;
     private final int energyLossPerDay;
     public AbstractWorldMap(int width, int height, int energyLossPerDay){
@@ -51,15 +53,13 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     public void positionChanged(Animal movedElement, MoveVector oldPosition, MoveVector newPosition){
         movedElement.removeEnergy(this.energyLossPerDay);
         if(movedElement.getEnergy() <= 0)
-            this.undertaker.addDyingAnimal(movedElement);
+            this.undertaker.addDyingAnimal(movedElement); //Animal can be dying but eat before death making it not dead
         if(oldPosition.equals(newPosition)){
             return;
         }
-        if (this.mapAnimals.get(oldPosition) != null) {
-            this.mapAnimals.get(oldPosition).remove(movedElement);
-            if (this.mapAnimals.get(oldPosition).isEmpty()) {
-                this.mapAnimals.remove(oldPosition);
-            }
+        this.mapAnimals.get(oldPosition).remove(movedElement);
+        if (this.mapAnimals.get(oldPosition).isEmpty()) {
+            this.mapAnimals.remove(oldPosition);
         }
         this.mapAnimals.computeIfAbsent(newPosition, s -> new ArrayList<>());
         this.mapAnimals.get(newPosition).add(movedElement);
@@ -73,7 +73,7 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     }
     public void feast(){
         for(MoveVector key: this.mapAnimals.keySet()){
-            if(this.gardener.plantAt(key) != null && !this.mapAnimals.get(key).isEmpty()){
+            if(this.gardener.plantAt(key) != null){
                 Animal max = this.mapAnimals.get(key).stream().max(Comparator.comparingInt(Animal::getEnergy)).get();
                 max.eat(this.gardener.plantAt(key));
                 this.gardener.plantGotEaten(key);
