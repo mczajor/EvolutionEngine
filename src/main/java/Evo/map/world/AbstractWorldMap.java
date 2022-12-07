@@ -3,6 +3,7 @@ import Evo.map.elements.*;
 import Evo.map.utility.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements IPositionObserver {
     protected final int width;
@@ -13,12 +14,14 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     private AbstractUnderTaker undertaker;
     //Gardener is responsible for all things plant related
     private AbstractGardener gardener;
+    private final int reproductionThreshold;
     private final int energyLossPerDay;
-    public AbstractWorldMap(int width, int height, int energyLossPerDay){
+    public AbstractWorldMap(int width, int height, int energyLossPerDay, int rThreshold){
         mapAnimals = new HashMap<>();
         this.width = width;
         this.height = height;
         this.energyLossPerDay = energyLossPerDay;
+        this.reproductionThreshold = rThreshold;
     }
     public void addUnderTaker(AbstractUnderTaker undertaker){
         this.undertaker = undertaker;
@@ -80,15 +83,42 @@ public abstract class AbstractWorldMap implements IPositionObserver {
             }
         }
     }
+    public Animal[] chooseParents(List<Animal> possibleParents){
+        if (possibleParents.size() < 2){
+            return null;
+        }
+        if(possibleParents.size() == 2){
+            return possibleParents.toArray(Animal[]::new);
+        }
+        Animal[] parents = new Animal[2];
+        possibleParents = possibleParents.stream().sorted(Comparator.comparingInt(Animal::getEnergy)).collect(Collectors.toList());
+        if(possibleParents.get(1).getEnergy() > possibleParents.get(2).getEnergy()){
+            parents[0] = possibleParents.get(0);
+            parents[1] = possibleParents.get(1);
+            return parents;
+        }
+        possibleParents = possibleParents.stream().sorted(Comparator.comparingInt(Animal::getAge)).collect(Collectors.toList());
+        if(possibleParents.get(1).getAge() > possibleParents.get(2).getAge()){
+            parents[0] = possibleParents.get(0);
+            parents[1] = possibleParents.get(1);
+            return parents;
+        }
+        possibleParents = possibleParents.stream().sorted(Comparator.comparingInt(Animal::getChildren)).collect(Collectors.toList());
+        parents[0] = possibleParents.get(0);
+        parents[1] = possibleParents.get(1);
+        return parents;
+    }
+
     public List<Animal> mingle(){
         List<Animal> children = new ArrayList<>();
-        for(MoveVector key: this.mapAnimals.keySet()){
-            if(this.mapAnimals.get(key).size() > 1){
-                this.mapAnimals.get(key).sort(Comparator.comparingInt(Animal::getEnergy));
-                Animal child = this.mapAnimals.get(key).get(0).reproduce(this.mapAnimals.get(key).get(1));
-                this.mapAnimals.get(key).add(child);
-                children.add(child);
+        for(MoveVector key: this.mapAnimals.keySet()) {
+            Animal[] parents = chooseParents(this.mapAnimals.get(key).stream().filter(animal -> animal.getEnergy() > this.reproductionThreshold).toList());
+            if (parents == null){
+                continue;
             }
+            Animal child = parents[0].reproduce(parents[1]);
+            this.mapAnimals.get(key).add(child);
+            children.add(child);
         }
         return children;
     }

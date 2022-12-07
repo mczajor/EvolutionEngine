@@ -27,6 +27,15 @@ public abstract class AbstractGardener {
         MoveVector dimensions = map.getDimensions();
         return new MoveVector((int)(Math.random()*dimensions.x), (int)(Math.random()*dimensions.y));
     }
-    public void plant(int amount) {}
+    public void plant(int amount) {
+        for(int i=0; i<amount; i++){
+            MoveVector position = this.generatePosition();
+            if(position == null){
+                continue;
+            }
+            Plant plant = new Plant(position, this.plantEnergy);
+            plantMap.put(plant.getPosition(), plant);
+        }
+    }
     public void plantGotEaten(MoveVector position){}
 }

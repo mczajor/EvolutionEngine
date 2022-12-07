@@ -1,6 +1,5 @@
 package Evo.map.utility;
 import Evo.map.elements.MoveVector;
-import Evo.map.elements.Plant;
 import Evo.map.world.AbstractWorldMap;
 
 import java.util.ArrayList;
@@ -52,16 +51,5 @@ public class EquatorGardener extends AbstractGardener {
             this.viablePositions.remove(randomY);
         }
         return new MoveVector(randomX, randomY);
-    }
-
-    public void plant(int amount) {
-        for(int i=0; i<amount; i++){
-            MoveVector position = this.generatePosition();
-            if(position == null){
-                continue;
-            }
-            Plant plant = new Plant(position, this.plantEnergy);
-            plantMap.put(plant.getPosition(), plant);
-        }
     }
 }

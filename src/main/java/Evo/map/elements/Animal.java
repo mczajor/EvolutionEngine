@@ -8,34 +8,64 @@ public class Animal implements IMapElement {
     private Orientation orientation;
     private final Genotype genotype;
     private int energy;
-    private final ArrayList<IPositionObserver> observers = new ArrayList<>();
     private int age;
+    private int children;
+    private int plantsEaten;
+    private final ArrayList<IPositionObserver> observers = new ArrayList<>();
+    private final int bornOn;
     private boolean isDead = false;
-    public final int status;
+    static int energyForReproduction;
+    //private final int status;
 
     //Contructor for initial animals
-    public Animal(MoveVector position, IPositionObserver map, int startEnergy){
+    public Animal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy, int energyPerDay){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         this.observers.add(map);
         this.energy = startEnergy;
         this.genotype = new Genotype();
+        this.bornOn = 0;
         this.age = 0;
-        this.status = 0;
+        this.children = 0;
+        energyForReproduction = reproductionEnergy;
+        //this.status = 0;
     }
     //Constructor for children of animals
-    public Animal(MoveVector position, Animal parent1, Animal parent2){
-        this.position = position;
+    public Animal(Animal parent1, Animal parent2){
+        this.position = parent1.getPosition();
         this.orientation = Orientation.randomOrientation();
-        genotype = new Genotype(parent1, parent2);
-        this.status = ((parent1.status + parent2.status)/2 + 1);
+        this.genotype = new Genotype(parent1, parent2);
+        this.bornOn = parent1.getAge() + parent1.getBornOn();
+        this.energy = 2*energyForReproduction;
+        this.age = 0;
+        this.children = 0;
+        parent1.removeEnergy(energyForReproduction);
+        parent2.removeEnergy(energyForReproduction);
+        parent1.addChildren();
+        parent2.addChildren();
+        //this.status = ((parent1.status + parent2.status)/2 + 1);
     }
 
+
     @Override
-    public String toString(){ return ""+this.status; }
+    public String toString(){ return "" + this.getEnergy(); }
     public MoveVector getPosition(){
         return this.position;
     }
+
+    public int getAge() {
+        return age;
+    }
+    public int getBornOn() {
+        return bornOn;
+    }
+    public int getChildren(){
+        return this.children;
+    }
+    public void addChildren(){
+        this.children++;
+    }
+
     public Orientation getOrientation(){
         return this.orientation;
     }
@@ -45,12 +75,14 @@ public class Animal implements IMapElement {
     public int getEnergy(){
         return this.energy;
     }
-
+    public void addObserver(IPositionObserver observer){
+        this.observers.add(observer);
+    }
+    public void setPosition(MoveVector newPosition){
+        this.position = newPosition;
+    }
     public void removeEnergy(int energy){
         this.energy -= energy;
-    }
-    public void addEnergy(int energy){
-        this.energy += energy;
     }
     public boolean isDead(){
         return this.isDead;
@@ -76,25 +108,16 @@ public class Animal implements IMapElement {
     }
 
     public void  move(){
-        changeOrientation();
+        this.changeOrientation();
         MoveVector nextMove = this.orientation.toUnitVector();
         this.age++;
         this.positionChanged(this.position, this.position.add(nextMove));
     }
 
-    public boolean eat(Plant plant){
+    public void eat(Plant plant){
         energy += plant.getEnergy();
-        return true;
     }
-
     public Animal reproduce(Animal parent){
-        return new Animal(this.getPosition(), this, parent);
-    }
-
-    public void addObserver(IPositionObserver observer){
-        this.observers.add(observer);
-    }
-    public void setPosition(MoveVector newPosition){
-        this.position = newPosition;
+        return new Animal(this, parent);
     }
 }
