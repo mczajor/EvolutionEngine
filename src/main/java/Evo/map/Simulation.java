@@ -16,10 +16,10 @@ public class Simulation {
         run(width, height);
     }
     public static void run(int width, int height){
-        AbstractWorldMap map = new SphericalWorld(width, height, 5);
+        AbstractWorldMap map = new HellPortal(width, height, 5);
         MapVisualizer visualizer = new MapVisualizer(map);
         AbstractGardener gardener = new EquatorGardener(map, width, height, 50, 50);
-        List<Animal> animals = new ArrayList<>();
+        ArrayList<Animal> animals = new ArrayList<>();
         AbstractUnderTaker underTaker = new UnderTaker(map);
         map.addUnderTaker(underTaker);
         map.addGardener(gardener);
@@ -31,12 +31,10 @@ public class Simulation {
         }
         for(int i = 0; i < 1000; i++){
             underTaker.buryTheDead();
-            animals = animals.stream().filter(animal -> !animal.isDead()).toList();
-            for(Animal animal : animals){
-                animal.move();
-            }
+            animals.removeIf(Animal::isDead);
+            animals.forEach(Animal::move);
             map.feast();
-            animals = Stream.concat(animals.stream(), map.mingle().stream()).toList();
+            animals.addAll(map.mingle());
             gardener.plant(2);
         }
         System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
