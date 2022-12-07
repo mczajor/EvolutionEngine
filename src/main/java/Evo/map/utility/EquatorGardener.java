@@ -23,7 +23,7 @@ public class EquatorGardener extends AbstractGardener {
             }
         this.plant(startingPlants);
     }
-
+    @Override
     public void plantGotEaten(MoveVector position){
         this.plantMap.remove(position);
         this.viablePositions.computeIfAbsent(position.x, k -> new ArrayList<>());

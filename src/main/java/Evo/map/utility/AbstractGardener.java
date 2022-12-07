@@ -37,5 +37,7 @@ public abstract class AbstractGardener {
             plantMap.put(plant.getPosition(), plant);
         }
     }
-    public void plantGotEaten(MoveVector position){}
+    public void plantGotEaten(MoveVector position){
+        this.plantMap.remove(position);
+    }
 }

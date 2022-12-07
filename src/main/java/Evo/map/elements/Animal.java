@@ -44,7 +44,7 @@ public class Animal implements IMapElement {
 
 
     @Override
-    public String toString(){ return "" + this.children; }
+    public String toString(){ return "" + this.age; }
     public MoveVector getPosition(){
         return this.position;
     }
