@@ -8,27 +8,24 @@ public class Animal implements IMapElement {
     private Orientation orientation;
     private final Genotype genotype;
     private int energy;
-    private int age;
-    private int children;
-    private int plantsEaten;
+    private int age = 0;
+    private int children = 0;
+    private int plantsEaten = 0;
     private final ArrayList<IPositionObserver> observers = new ArrayList<>();
     private final int bornOn;
     private boolean isDead = false;
     static int energyForReproduction;
-    //private final int status;
 
     //Contructor for initial animals
-    public Animal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy, int energyPerDay){
+    public Animal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         this.observers.add(map);
         this.energy = startEnergy;
         this.genotype = new Genotype();
         this.bornOn = 0;
-        this.age = 0;
-        this.children = 0;
+        this.age = 1;
         energyForReproduction = reproductionEnergy;
-        //this.status = 0;
     }
     //Constructor for children of animals
     public Animal(Animal parent1, Animal parent2){
@@ -37,8 +34,7 @@ public class Animal implements IMapElement {
         this.genotype = new Genotype(parent1, parent2);
         this.bornOn = parent1.getAge() + parent1.getBornOn();
         this.energy = 2*energyForReproduction;
-        this.age = 0;
-        this.children = 0;
+        this.observers.addAll(parent1.getObservers());
         parent1.removeEnergy(energyForReproduction);
         parent2.removeEnergy(energyForReproduction);
         parent1.addChildren();
@@ -48,9 +44,12 @@ public class Animal implements IMapElement {
 
 
     @Override
-    public String toString(){ return "" + this.getEnergy(); }
+    public String toString(){ return "" + this.children; }
     public MoveVector getPosition(){
         return this.position;
+    }
+    public void setPosition(MoveVector newPosition){
+        this.position = newPosition;
     }
 
     public int getAge() {
@@ -59,6 +58,12 @@ public class Animal implements IMapElement {
     public int getBornOn() {
         return bornOn;
     }
+    private ArrayList<IPositionObserver> getObservers() {
+        return this.observers;
+    }
+    public int getPlantsEaten(){
+        return this.plantsEaten;
+    }
     public int getChildren(){
         return this.children;
     }
@@ -66,31 +71,30 @@ public class Animal implements IMapElement {
         this.children++;
     }
 
-    public Orientation getOrientation(){
-        return this.orientation;
-    }
     public int[] getGenotype(){
         return this.genotype.getGenotype();
     }
     public int getEnergy(){
         return this.energy;
     }
-    public void addObserver(IPositionObserver observer){
-        this.observers.add(observer);
-    }
-    public void setPosition(MoveVector newPosition){
-        this.position = newPosition;
-    }
+    //public void addObserver(IPositionObserver observer){this.observers.add(observer);}
     public void removeEnergy(int energy){
         this.energy -= energy;
     }
-    public boolean isDead(){
-        return this.isDead;
+    public void eat(Plant plant){
+        energy += plant.getEnergy();
+        this.plantsEaten++;
     }
     public void die(){
         this.isDead = true;
     }
+    public boolean isDead(){
+        return this.isDead;
+    }
     //Changes orientation of animal based on their genotype
+    public Orientation getOrientation(){
+        return this.orientation;
+    }
     private void changeOrientation(){
         int gene = genotype.getGenotype()[(int)(Math.random() * 32)];
         for (int i = 0; i < gene; i++) {
@@ -114,9 +118,6 @@ public class Animal implements IMapElement {
         this.positionChanged(this.position, this.position.add(nextMove));
     }
 
-    public void eat(Plant plant){
-        energy += plant.getEnergy();
-    }
     public Animal reproduce(Animal parent){
         return new Animal(this, parent);
     }
