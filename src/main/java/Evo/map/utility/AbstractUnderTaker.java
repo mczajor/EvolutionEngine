@@ -14,10 +14,11 @@ public abstract class AbstractUnderTaker {
     }
     public void buryTheDead() {
         for(Animal animal : potentialyDeadAnimals){
-            if(animal.getEnergy() <= 0){
-                map.removeAnimal(animal);
-                animal.die();
+            if(animal.getEnergy() > 0){
+                continue;
             }
+            map.removeAnimal(animal);
+            animal.die();
         }
         potentialyDeadAnimals.clear();
     }
