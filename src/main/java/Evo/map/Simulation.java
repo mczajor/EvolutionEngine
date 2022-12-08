@@ -28,9 +28,9 @@ public class Simulation {
     public static void run(int width, int height, int energyLoss, int reproductionThreshold, int plantEnergy, int startEnergy, int startPlants, int startAnimals, int grassPerDay, int energyForReproduction){
         AbstractWorldMap map = new HellPortal(width, height, energyLoss, reproductionThreshold);
         MapVisualizer visualizer = new MapVisualizer(map);
-        AbstractGardener gardener = new EquatorGardener(map, width, height, startPlants, plantEnergy);
+        NecrophobicGardener gardener = new NecrophobicGardener(map, width, height, startPlants, plantEnergy);
         ArrayList<Animal> animals = new ArrayList<>();
-        AbstractUnderTaker underTaker = new UnderTaker(map);
+        AbstractUnderTaker underTaker = new InformantUnderTaker(map, gardener);
         map.addUnderTaker(underTaker);
         map.addGardener(gardener);
         for (int i = 0; i < startAnimals; i++){
@@ -50,9 +50,8 @@ public class Simulation {
             animals.addAll(map.mingle());
             gardener.plant(grassPerDay);
         }
-        //for(Animal animal : animals){
-            //System.out.println("Energy: " + animal.getEnergy() + " Age: " + animal.getAge() + " BornOn: " + animal.getBornOn() + " Children: "+ animal.getChildren() + " PlantsEaten: " + animal.getPlantsEaten() + " InitialPosition: " + animal.getInitialPosition()+ " Current Position: " + animal.getPosition() + " IsDead: " + animal.isDead());
-        //
+        for(Animal animal : animals) {
+            System.out.println("Energy: " + animal.getEnergy() + " Age: " + animal.getAge() + " BornOn: " + animal.getBornOn() + " Children: " + animal.getChildren() + " PlantsEaten: " + animal.getPlantsEaten() + " Current Position: " + animal.getPosition() + " IsDead: " + animal.isDead());}
         System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
     }
 }
