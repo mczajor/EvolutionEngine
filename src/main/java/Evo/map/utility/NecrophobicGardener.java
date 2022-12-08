@@ -41,13 +41,19 @@ public class NecrophobicGardener extends AbstractGardener {
         for (Integer key: this.deathCount.keySet()){
             temp.addAll(deathCount.get(key).stream().filter(s -> !this.plantMap.containsKey(s)).collect(Collectors.toCollection(ArrayList::new)));
             if(temp.size() >= amount){
+                //System.out.print(" " + key + "\n");
                 break;
             }
         }
+        if (temp.size() < amount){
+            amount = temp.size();
+        }
         for (int i = 0; i<amount; i++){
+            //System.out.print(" "+ temp.size());
             MoveVector position = temp.get((int)(Math.random()*temp.size()));
             this.plantMap.put(position, new Plant(position, this.plantEnergy));
             temp.remove(position);
         }
+        //System.out.print("\n__________\n");
     }
 }
