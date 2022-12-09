@@ -40,4 +40,5 @@ public abstract class AbstractGardener {
     public void plantGotEaten(MoveVector position){
         this.plantMap.remove(position);
     }
+    public void animalDied(MoveVector position){}
 }

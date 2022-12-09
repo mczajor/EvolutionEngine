@@ -3,35 +3,48 @@ import Evo.map.world.*;
 
 import java.util.ArrayList;
 
-public class Animal implements IMapElement {
-    private  MoveVector position;
-    private Orientation orientation;
-    private final Genotype genotype;
+public abstract class AbstractAnimal implements IMapElement {
+    protected MoveVector position;
+    protected Orientation orientation;
+    protected final AbstractGenotype abstractGenotype;
     private int energy;
     private int age = 0;
     private int children = 0;
     private int plantsEaten = 0;
+    protected int activeGene = 0;
     private final ArrayList<IPositionObserver> observers = new ArrayList<>();
     private final int bornOn;
     private boolean isDead = false;
     static int energyForReproduction;
+    static int genoType;
 
     //Contructor for initial animals
-    public Animal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy){
+    public AbstractAnimal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy,int speciesGenotype, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
         this.observers.add(map);
         this.energy = startEnergy;
-        this.genotype = new Genotype();
+        genoType = speciesGenotype;
+        if(genoType == 0){
+            this.abstractGenotype = new RandomGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
+        }
+        else{
+            this.abstractGenotype = new AdjustmentGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
+        }
         this.bornOn = 0;
         this.age = 1;
         energyForReproduction = reproductionEnergy;
     }
     //Constructor for children of animals
-    public Animal(Animal parent1, Animal parent2){
+    public AbstractAnimal(AbstractAnimal parent1, AbstractAnimal parent2){
         this.position = parent1.getPosition();
         this.orientation = Orientation.randomOrientation();
-        this.genotype = new Genotype(parent1, parent2);
+        if(genoType == 0){
+            this.abstractGenotype = new RandomGenotype(parent1, parent2);
+        }
+        else{
+            this.abstractGenotype = new AdjustmentGenotype(parent1, parent2);
+        }
         this.bornOn = parent1.getAge() + parent1.getBornOn();
         this.energy = 2*energyForReproduction;
         this.observers.addAll(parent1.getObservers());
@@ -72,7 +85,7 @@ public class Animal implements IMapElement {
     }
 
     public int[] getGenotype(){
-        return this.genotype.getGenotype();
+        return this.abstractGenotype.getGenotype();
     }
     public int getEnergy(){
         return this.energy;
@@ -95,8 +108,8 @@ public class Animal implements IMapElement {
     public Orientation getOrientation(){
         return this.orientation;
     }
-    private void changeOrientation(){
-        int gene = genotype.getGenotype()[(int)(Math.random() * 32)];
+    private void determineNextMove(){
+        int gene = abstractGenotype.getGenotype()[(int)(Math.random() * 32)];
         for (int i = 0; i < gene; i++) {
             this.orientation = this.orientation.next();
         }
@@ -112,13 +125,13 @@ public class Animal implements IMapElement {
     }
 
     public void  move(){
-        this.changeOrientation();
+        this.determineNextMove();
         MoveVector nextMove = this.orientation.toUnitVector();
         this.age++;
         this.positionChanged(this.position, this.position.add(nextMove));
     }
 
-    public Animal reproduce(Animal parent){
-        return new Animal(this, parent);
+    public AbstractAnimal reproduce(AbstractAnimal parent){
+        return null;
     }
 }

@@ -1,25 +1,25 @@
 package Evo.map.utility;
 
-import Evo.map.elements.Animal;
+import Evo.map.elements.AbstractAnimal;
 import Evo.map.world.AbstractWorldMap;
 
 public class InformantUnderTaker extends AbstractUnderTaker{
-    NecrophobicGardener gardener;
-    public InformantUnderTaker(AbstractWorldMap map, NecrophobicGardener gardener){
+    AbstractGardener gardener;
+    public InformantUnderTaker(AbstractWorldMap map, AbstractGardener gardener){
         super(map);
         this.gardener = gardener;
     }
     @Override
     public void buryTheDead(){
-        for(Animal animal : potentialyDeadAnimals){
-            if(animal.getEnergy() > 0){
+        for(AbstractAnimal abstractAnimal : potentialyDeadAbstractAnimals){
+            if(abstractAnimal.getEnergy() > 0){
                 continue;
             }
-            map.removeAnimal(animal);
-            animal.die();
-            gardener.animalDied(animal.getPosition());
+            map.removeAnimal(abstractAnimal);
+            abstractAnimal.die();
+            gardener.animalDied(abstractAnimal.getPosition());
         }
-        potentialyDeadAnimals.clear();
+        potentialyDeadAbstractAnimals.clear();
     }
 }
 

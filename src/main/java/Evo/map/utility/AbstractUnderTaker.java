@@ -1,28 +1,28 @@
 package Evo.map.utility;
 
-import Evo.map.elements.Animal;
+import Evo.map.elements.AbstractAnimal;
 import Evo.map.world.AbstractWorldMap;
 
 import java.util.ArrayList;
 
 public abstract class AbstractUnderTaker {
     protected AbstractWorldMap map;
-    protected ArrayList<Animal> potentialyDeadAnimals = new ArrayList<>();
+    protected ArrayList<AbstractAnimal> potentialyDeadAbstractAnimals = new ArrayList<>();
 
     public AbstractUnderTaker(AbstractWorldMap map){
         this.map = map;
     }
     public void buryTheDead() {
-        for(Animal animal : potentialyDeadAnimals){
-            if(animal.getEnergy() > 0){
+        for(AbstractAnimal abstractAnimal : potentialyDeadAbstractAnimals){
+            if(abstractAnimal.getEnergy() > 0){
                 continue;
             }
-            map.removeAnimal(animal);
-            animal.die();
+            map.removeAnimal(abstractAnimal);
+            abstractAnimal.die();
         }
-        potentialyDeadAnimals.clear();
+        potentialyDeadAbstractAnimals.clear();
     }
-    public void addDyingAnimal(Animal animal){
-        potentialyDeadAnimals.add(animal);
+    public void addDyingAnimal(AbstractAnimal abstractAnimal){
+        potentialyDeadAbstractAnimals.add(abstractAnimal);
     }
 }
