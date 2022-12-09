@@ -8,7 +8,7 @@ public abstract class AbstractAnimal implements IMapElement {
     protected Orientation orientation;
     protected final AbstractGenotype abstractGenotype;
     private int energy;
-    private int age = 0;
+    protected int age = 0;
     private int children = 0;
     private int plantsEaten = 0;
     protected int activeGene = 0;
@@ -108,28 +108,17 @@ public abstract class AbstractAnimal implements IMapElement {
     public Orientation getOrientation(){
         return this.orientation;
     }
-    private void determineNextMove(){
-        int gene = abstractGenotype.getGenotype()[(int)(Math.random() * 32)];
-        for (int i = 0; i < gene; i++) {
-            this.orientation = this.orientation.next();
-        }
-    }
     //Turns the animal around. Only for Spherical World
     public void turnAround(){
         this.orientation = this.orientation.next().next().next().next();
     }
-    private void positionChanged(MoveVector oldPosition, MoveVector newPosition){
+    protected void positionChanged(MoveVector oldPosition, MoveVector newPosition){
         for(IPositionObserver observer: observers){
             observer.positionChanged(this, oldPosition, newPosition);
         }
     }
 
-    public void  move(){
-        this.determineNextMove();
-        MoveVector nextMove = this.orientation.toUnitVector();
-        this.age++;
-        this.positionChanged(this.position, this.position.add(nextMove));
-    }
+    public void  move(){}
 
     public AbstractAnimal reproduce(AbstractAnimal parent){
         return null;

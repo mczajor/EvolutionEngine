@@ -7,28 +7,27 @@ import Evo.map.elements.AbstractAnimal;
 import Evo.map.utility.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Simulation {
 
     public static void main(String[] args){
         int mapType = 0;
-        int width = 80;
-        int height = 80;
+        int width = 20;
+        int height = 20;
 
-        int gardenerType = 0;
-        int startPlants = 300;
+        int gardenerType = 1;
+        int startPlants = 100;
         int plantEnergy = 100;
-        int grassPerDay = 50;
+        int grassPerDay = 2;
 
-        int animalType = 0;
-        int startAnimals = 200;
+        int animalType = 1;
+        int startAnimals = 2;
         int startEnergy = 200;
         int energyLoss = 20;
-        int energyForReproduction = 200;
-        int reproductionThreshold = 150;
+        int energyForReproduction = 100;
+        int reproductionThreshold = 155;
 
-        int genomeType = 1;
+        int genomeType = 0;
         int genomeLength = 32;
         int minGenomeMutations = 1;
         int maxGenomeMutations = 3;
@@ -69,11 +68,11 @@ public class Simulation {
             }
         }
         //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
-        for(int i = 0; i < 10000; i++){
-            //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
+        for(int i = 0; i < 100; i++){
+            System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
             underTaker.buryTheDead();
             abstractAnimals.removeIf(AbstractAnimal::isDead);
-            Collections.shuffle(abstractAnimals);
+            //Collections.shuffle(abstractAnimals);
             abstractAnimals.forEach(AbstractAnimal::move);
             map.feast();
             abstractAnimals.addAll(map.mingle());

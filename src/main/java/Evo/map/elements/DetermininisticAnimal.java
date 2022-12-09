@@ -17,6 +17,13 @@ public class DetermininisticAnimal extends AbstractAnimal{
             this.orientation = this.orientation.next();
         }
     }
+    @Override
+    public void  move(){
+        this.determineNextMove();
+        MoveVector nextMove = this.orientation.toUnitVector();
+        this.age++;
+        this.positionChanged(this.position, this.position.add(nextMove));
+    }
     public AbstractAnimal reproduce(AbstractAnimal parent){
         return new DetermininisticAnimal(this, parent);
     }

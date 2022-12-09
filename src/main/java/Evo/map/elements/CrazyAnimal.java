@@ -9,7 +9,9 @@ public class CrazyAnimal extends AbstractAnimal{
     public CrazyAnimal(AbstractAnimal parent1, AbstractAnimal parent2){
         super(parent1, parent2);
     }
-    public void deremineNextMove(){
+
+    private void determineNextMove(){
+        //System.out.println("chuj");
         if(Math.random() > 0.2){
             this.activeGene = (this.activeGene + 1) % this.abstractGenotype.getLength();
         }
@@ -20,6 +22,13 @@ public class CrazyAnimal extends AbstractAnimal{
         for (int i = 0; i < gene; i++) {
             this.orientation = this.orientation.next();
         }
+    }
+    @Override
+    public void  move(){
+        this.determineNextMove();
+        MoveVector nextMove = this.orientation.toUnitVector();
+        this.age++;
+        this.positionChanged(this.position, this.position.add(nextMove));
     }
     public AbstractAnimal reproduce(AbstractAnimal parent){
         return new CrazyAnimal(this, parent);

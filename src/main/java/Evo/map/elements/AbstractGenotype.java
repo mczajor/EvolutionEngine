@@ -2,7 +2,6 @@ package Evo.map.elements;
 
 abstract class AbstractGenotype {
     protected final int[] genes;
-    protected int currActive;
     static int minMutations;
     static int maxMutations;
     static int length;
@@ -10,12 +9,10 @@ abstract class AbstractGenotype {
         length = genomeLength;
         minMutations = minGenomeMutations;
         maxMutations = maxGenomeMutations;
-        this.currActive = 0;
         this.genes = new int[length];
         for(int i = 0; i < length; i++){
             genes[i] = (int)(Math.random() * 8);
         }
-        currActive = (int)(Math.random() * length);
     }
     public AbstractGenotype(AbstractAnimal parent1, AbstractAnimal parent2){
         genes = new int[length];
