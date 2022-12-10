@@ -7,18 +7,18 @@ public abstract class AbstractAnimal implements IMapElement {
     protected MoveVector position;
     protected Orientation orientation;
     protected final AbstractGenotype abstractGenotype;
-    private int energy;
+    protected int energy;
     protected int age = 0;
-    private int children = 0;
-    private int plantsEaten = 0;
+    protected int children = 0;
+    protected int plantsEaten = 0;
     protected int activeGene = 0;
-    private final ArrayList<IPositionObserver> observers = new ArrayList<>();
-    private final int bornOn;
-    private boolean isDead = false;
-    static int energyForReproduction;
-    static int genoType;
+    protected final ArrayList<IPositionObserver> observers = new ArrayList<>();
+    protected final int bornOn;
+    protected boolean isDead = false;
+    protected static int energyForReproduction;
+    protected static int genoType;
 
-    //Contructor for initial animals
+    //Constructor for initial animals
     public AbstractAnimal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy,int speciesGenotype, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
         this.position = position;
         this.orientation = Orientation.randomOrientation();
@@ -32,7 +32,6 @@ public abstract class AbstractAnimal implements IMapElement {
             this.abstractGenotype = new AdjustmentGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
         }
         this.bornOn = 0;
-        this.age = 1;
         energyForReproduction = reproductionEnergy;
     }
     //Constructor for children of animals
@@ -71,7 +70,7 @@ public abstract class AbstractAnimal implements IMapElement {
     public int getBornOn() {
         return bornOn;
     }
-    private ArrayList<IPositionObserver> getObservers() {
+    protected ArrayList<IPositionObserver> getObservers() {
         return this.observers;
     }
     public int getPlantsEaten(){
@@ -87,6 +86,9 @@ public abstract class AbstractAnimal implements IMapElement {
     public int[] getGenotype(){
         return this.abstractGenotype.getGenotype();
     }
+    public boolean isRandom(){
+        return this.abstractGenotype instanceof RandomGenotype;
+    }
     public int getEnergy(){
         return this.energy;
     }
@@ -94,8 +96,11 @@ public abstract class AbstractAnimal implements IMapElement {
     public void removeEnergy(int energy){
         this.energy -= energy;
     }
+    public void addEnergy(int energy){
+        this.energy += energy;
+    }
     public void eat(Plant plant){
-        energy += plant.getEnergy();
+        this.addEnergy(plant.getEnergy());
         this.plantsEaten++;
     }
     public void die(){
@@ -117,7 +122,6 @@ public abstract class AbstractAnimal implements IMapElement {
             observer.positionChanged(this, oldPosition, newPosition);
         }
     }
-
     public void  move(){}
 
     public AbstractAnimal reproduce(AbstractAnimal parent){

@@ -1,39 +1,48 @@
 package Evo.map;
-import Evo.map.elements.CrazyAnimal;
-import Evo.map.elements.DetermininisticAnimal;
-import Evo.map.elements.MoveVector;
+import Evo.map.elements.*;
 import Evo.map.world.*;
-import Evo.map.elements.AbstractAnimal;
 import Evo.map.utility.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 public class Simulation {
 
     public static void main(String[] args){
-        int mapType = 0;
-        int width = 20;
-        int height = 20;
+        try{
+            Path path = Paths.get("src/main/resources/1.txt");
+            Map<String, Integer> map = FileReader.byStream(path);
+            int mapType = map.get("mapType");
+            int width = map.get("width");
+            int height = map.get("height");
 
-        int gardenerType = 1;
-        int startPlants = 100;
-        int plantEnergy = 100;
-        int grassPerDay = 2;
+            int gardenerType = map.get("gardenerType");
+            int startPlants = map.get("startPlants");
+            int plantEnergy = map.get("plantEnergy");
+            int grassPerDay = map.get("plantsPerDay");
 
-        int animalType = 1;
-        int startAnimals = 2;
-        int startEnergy = 200;
-        int energyLoss = 20;
-        int energyForReproduction = 100;
-        int reproductionThreshold = 155;
+            int animalType = map.get("animalType");
+            int startAnimals = map.get("startAnimals");
+            int startEnergy = map.get("animalEnergy");
+            int energyLoss = map.get("energyLoss");
+            int energyForReproduction = map.get("energyForReproduction");
+            int reproductionThreshold = map.get("reproductionThreshold");
 
-        int genomeType = 0;
-        int genomeLength = 32;
-        int minGenomeMutations = 1;
-        int maxGenomeMutations = 3;
-
-        run(mapType, width, height, gardenerType, startPlants, plantEnergy, grassPerDay, animalType, startAnimals, startEnergy,
-                energyLoss, energyForReproduction, reproductionThreshold, genomeType, genomeLength, minGenomeMutations, maxGenomeMutations);
+            int genomeType = map.get("genomeType");
+            int genomeLength = map.get("genomeLength");
+            int minGenomeMutations = map.get("minGenomeMutation");
+            int maxGenomeMutations = map.get("maxGenomeMutation");
+            run(mapType, width, height, gardenerType, startPlants, plantEnergy, grassPerDay, animalType, startAnimals, startEnergy,
+                    energyLoss, energyForReproduction, reproductionThreshold, genomeType, genomeLength, minGenomeMutations, maxGenomeMutations);
+        } catch (IOException | NumberFormatException e){
+            System.err.println(e.getMessage());
+        } catch (NullPointerException e){
+            System.err.println("File is formatted incorrectly");
+        }
     }
     public static void run(int mapType, int width, int height, int gardenerType, int startPlants, int plantEnergy, int grassPerDay, int animalType, int startAnimals, int startEnergy, int energyLoss,
                            int energyForReproduction, int reproductionThreshold, int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
@@ -68,18 +77,18 @@ public class Simulation {
             }
         }
         //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
-        for(int i = 0; i < 100; i++){
-            System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
+        for(int i = 0; i < 10000; i++){
+            //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
             underTaker.buryTheDead();
             abstractAnimals.removeIf(AbstractAnimal::isDead);
-            //Collections.shuffle(abstractAnimals);
+            Collections.shuffle(abstractAnimals);
             abstractAnimals.forEach(AbstractAnimal::move);
             map.feast();
             abstractAnimals.addAll(map.mingle());
             gardener.plant(grassPerDay);
         }
         for(AbstractAnimal abstractAnimal : abstractAnimals) {
-            System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition());}
+            System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition() + " Genotype: " + abstractAnimal.isRandom());}
         System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
     }
 }

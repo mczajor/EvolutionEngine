@@ -11,7 +11,6 @@ public class CrazyAnimal extends AbstractAnimal{
     }
 
     private void determineNextMove(){
-        //System.out.println("chuj");
         if(Math.random() > 0.2){
             this.activeGene = (this.activeGene + 1) % this.abstractGenotype.getLength();
         }
