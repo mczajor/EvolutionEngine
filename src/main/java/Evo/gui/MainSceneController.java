@@ -1,11 +1,21 @@
 package Evo.gui;
 
+import Evo.map.Simulation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MainSceneController {
 
@@ -13,67 +23,114 @@ public class MainSceneController {
     ObservableList<String> animalTypes = FXCollections.observableArrayList("Detereministyczne", "Losowe");
     ObservableList<String> grassTypes = FXCollections.observableArrayList("Zalesione stepy", "Toksyczne trupy");
     ObservableList<String> genotypeTypes = FXCollections.observableArrayList("Pelna losowosc", "Lekka korekta");
-    @FXML
-    private ChoiceBox<String> animaltype;
 
     @FXML
-    private TextField energyforreproduction;
+    private ChoiceBox<String> animalType;
 
     @FXML
-    private TextField energyloss;
+    private TextField startingEnergy;
+    @FXML
+    private TextField energyForReproduction;
 
     @FXML
-    private TextField filepath;
+    private TextField energyLoss;
 
     @FXML
-    private ChoiceBox<String> gardenertype;
+    private TextField filePath;
+
+    @FXML
+    private ChoiceBox<String> gardenerType;
 
     @FXML
     private ChoiceBox<String> genotype;
 
     @FXML
-    private TextField genotypelength;
+    private TextField genotypeLength;
 
     @FXML
-    private Button loadfile;
+    private TextField mapHeight;
 
     @FXML
-    private TextField mapheight;
+    private ChoiceBox<String> mapType;
 
     @FXML
-    private ChoiceBox<String> maptype;
+    private TextField mapWidth;
 
     @FXML
-    private TextField mapwidth;
+    private TextField maxMutations;
 
     @FXML
-    private TextField maxmutations;
+    private TextField minMutations;
 
     @FXML
-    private TextField minmutations;
+    private TextField plantEnergy;
 
     @FXML
-    private TextField plantenergy;
-
-    @FXML
-    private TextField plantsperday;
+    private TextField plantsPerDay;
 
     @FXML
     private TextField reproductionThreshold;
 
     @FXML
-    private TextField startinganimals;
+    private TextField sleepTime;
 
     @FXML
-    private TextField startingplants;
+    private TextField startingAnimals;
 
     @FXML
-    private Button startsimul;
+    private TextField startingPlants;
+
+    @FXML
+    void startSimul(ActionEvent event) {
+        try{
+            Simulation simulation;
+            if (!this.filePath.getText().equals("")){
+                Path path = Paths.get("src/main/resources/PreMadeConfigs/" + this.filePath.getText() + ".txt");
+                simulation = new Simulation(path);
+            } else{
+                int mapType = this.mapType.getSelectionModel().getSelectedIndex();
+                int mapWidth = Integer.parseInt(this.mapWidth.getText());
+                int mapHeight = Integer.parseInt(this.mapHeight.getText());
+
+                int animalType = this.animalType.getSelectionModel().getSelectedIndex();
+                int startingAnimals = Integer.parseInt(this.startingAnimals.getText());
+                int startingEnergy = Integer.parseInt(this.startingEnergy.getText());
+                int energyLoss = Integer.parseInt(this.energyLoss.getText());
+                int energyForReproduction = Integer.parseInt(this.energyForReproduction.getText());
+                int reproductionThreshold = Integer.parseInt(this.reproductionThreshold.getText());
+
+                int gardenerType = this.gardenerType.getSelectionModel().getSelectedIndex();
+                int startingPlants = Integer.parseInt(this.startingPlants.getText());
+                int plantsPerDay = Integer.parseInt(this.plantsPerDay.getText());
+                int plantEnergy = Integer.parseInt(this.plantEnergy.getText());
+
+                int genomeType = genotype.getSelectionModel().getSelectedIndex();
+                int genotypeLength = Integer.parseInt(this.genotypeLength.getText());
+                int minMutations = Integer.parseInt(this.minMutations.getText());
+                int maxMutations = Integer.parseInt(this.maxMutations.getText());
+                int sleepTime = Integer.parseInt(this.sleepTime.getText());
+                simulation = new Simulation(mapType, mapWidth, mapHeight,
+                            gardenerType, startingPlants, plantEnergy, plantsPerDay,
+                            animalType, startingAnimals, startingEnergy, energyLoss, energyForReproduction, reproductionThreshold,
+                            genomeType, genotypeLength, minMutations, maxMutations);
+                }
+            /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/SimulationScene.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.show();*/
+            simulation.run();
+
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            e.getStackTrace();
+        }
+    }
     @FXML
     public void initialize(){
-        maptype.setItems(mapTypes);
-        animaltype.setItems(animalTypes);
-        gardenertype.setItems(grassTypes);
+        mapType.setItems(mapTypes);
+        animalType.setItems(animalTypes);
+        gardenerType.setItems(grassTypes);
         genotype.setItems(genotypeTypes);
     }
 

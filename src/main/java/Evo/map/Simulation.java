@@ -5,72 +5,108 @@ import Evo.map.utility.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
 public class Simulation {
+    int mapType;
+    int width;
+    int height;
 
-    public static void main(String[] args){
-        try{
-            Path path = Paths.get("src/main/resources/1.txt");
-            Map<String, Integer> map = FileReader.byStream(path);
-            int mapType = map.get("mapType");
-            int width = map.get("width");
-            int height = map.get("height");
+    int gardenerType;
+    int startPlants;
+    int plantEnergy;
+    int grassPerDay;
 
-            int gardenerType = map.get("gardenerType");
-            int startPlants = map.get("startPlants");
-            int plantEnergy = map.get("plantEnergy");
-            int grassPerDay = map.get("plantsPerDay");
+    int animalType;
+    int startAnimals;
+    int startEnergy;
+    int energyLoss;
+    int energyForReproduction;
+    int reproductionThreshold;
 
-            int animalType = map.get("animalType");
-            int startAnimals = map.get("startAnimals");
-            int startEnergy = map.get("animalEnergy");
-            int energyLoss = map.get("energyLoss");
-            int energyForReproduction = map.get("energyForReproduction");
-            int reproductionThreshold = map.get("reproductionThreshold");
+    int genomeType;
+    int genomeLength;
+    int minGenomeMutations;
+    int maxGenomeMutations;
 
-            int genomeType = map.get("genomeType");
-            int genomeLength = map.get("genomeLength");
-            int minGenomeMutations = map.get("minGenomeMutation");
-            int maxGenomeMutations = map.get("maxGenomeMutation");
-            run(mapType, width, height, gardenerType, startPlants, plantEnergy, grassPerDay, animalType, startAnimals, startEnergy,
-                    energyLoss, energyForReproduction, reproductionThreshold, genomeType, genomeLength, minGenomeMutations, maxGenomeMutations);
-        } catch (IOException | NumberFormatException e){
-            System.err.println(e.getMessage());
-        } catch (NullPointerException e){
-            System.err.println("File is formatted incorrectly");
-        }
+    public Simulation(int mapType, int width, int height,
+                      int gardenerType, int startPlants, int plantEnergy, int grassPerDay,
+                      int animalType, int startAnimals, int startEnergy, int energyLoss, int energyForReproduction, int reproductionThreshold,
+                      int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
+        this.mapType = mapType;
+        this.width = width;
+        this.height = height;
+
+        this.gardenerType = gardenerType;
+        this.startPlants = startPlants;
+        this.plantEnergy = plantEnergy;
+        this.grassPerDay = grassPerDay;
+
+        this.animalType = animalType;
+        this.startAnimals = startAnimals;
+        this.startEnergy = startEnergy;
+        this.energyLoss = energyLoss;
+        this.energyForReproduction = energyForReproduction;
+        this.reproductionThreshold = reproductionThreshold;
+
+        this.genomeType = genomeType;
+        this.genomeLength = genomeLength;
+        this.minGenomeMutations = minGenomeMutations;
+        this.maxGenomeMutations = maxGenomeMutations;
     }
-    public static void run(int mapType, int width, int height, int gardenerType, int startPlants, int plantEnergy, int grassPerDay, int animalType, int startAnimals, int startEnergy, int energyLoss,
-                           int energyForReproduction, int reproductionThreshold, int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
+
+    public Simulation(Path path) throws IOException, NumberFormatException {
+        //Path path = Paths.get("src/main/resources/PreMadeConfigs/1.txt");
+        Map<String, Integer> map = FileReader.byStream(path);
+        this.mapType = map.get("mapType");
+        this.width = map.get("width");
+        this.height = map.get("height");
+
+        this.gardenerType = map.get("gardenerType");
+        this.startPlants = map.get("startPlants");
+        this.plantEnergy = map.get("plantEnergy");
+        this.grassPerDay = map.get("plantsPerDay");
+
+        this.animalType = map.get("animalType");
+        this.startAnimals = map.get("startAnimals");
+        this.startEnergy = map.get("animalEnergy");
+        this.energyLoss = map.get("energyLoss");
+        this.energyForReproduction = map.get("energyForReproduction");
+        this.reproductionThreshold = map.get("reproductionThreshold");
+
+        this.genomeType = map.get("genomeType");
+        this.genomeLength = map.get("genomeLength");
+        this.minGenomeMutations = map.get("minGenomeMutation");
+        this.maxGenomeMutations = map.get("maxGenomeMutation");
+    }
+    public void run(){
         AbstractWorldMap map;
         if(mapType == 0){
-            map = new HellPortal(width, height, energyLoss, reproductionThreshold);
+            map = new HellPortal(this.width, this.height, this.energyLoss, this.reproductionThreshold);
         } else{
-            map = new SphericalWorld(width, height, energyLoss, reproductionThreshold);
+            map = new SphericalWorld(this.width, this.height, this.energyLoss, this.reproductionThreshold);
         }
         MapVisualizer visualizer = new MapVisualizer(map);
         AbstractGardener gardener;
         AbstractUnderTaker underTaker;
         if(gardenerType == 0){
-            gardener = new NecrophobicGardener(map, width, height, startPlants, plantEnergy);
+            gardener = new NecrophobicGardener(map, this.width, this.height, this.startPlants, this.plantEnergy);
             underTaker = new InformantUnderTaker(map, gardener);
         } else{
-            gardener = new EquatorGardener(map, width, height, startPlants, plantEnergy);
+            gardener = new EquatorGardener(map, this.width, this.height, this.startPlants, this.plantEnergy);
             underTaker = new UnderTaker(map);
         }
         ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
         map.addUnderTaker(underTaker);
         map.addGardener(gardener);
-        for (int i = 0; i < startAnimals; i++){
+        for (int i = 0; i < this.startAnimals; i++){
             AbstractAnimal animal;
-            if(animalType == 0){
-                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), map, startEnergy, energyForReproduction, genomeType, genomeLength, minGenomeMutations, maxGenomeMutations);
+            if(this.animalType == 0){
+                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*this.width), (int)(Math.random()*this.height)), map, this.startEnergy, this.energyForReproduction, this.genomeType, this.genomeLength, this.minGenomeMutations, this.maxGenomeMutations);
             } else{
-                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), map, startEnergy, energyForReproduction, genomeType, genomeLength, minGenomeMutations, maxGenomeMutations);
+                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*this.width), (int)(Math.random()*this.height)), map, this.startEnergy, this.energyForReproduction, this.genomeType, this.genomeLength, this.minGenomeMutations, this.maxGenomeMutations);
             }
             if(map.place(animal)){
                 abstractAnimals.add(animal);

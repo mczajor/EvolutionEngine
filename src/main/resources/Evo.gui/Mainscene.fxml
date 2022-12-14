@@ -9,75 +9,101 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="546.0" prefWidth="626.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Evo.gui.MainSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="405.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Evo.gui.MainSceneController">
    <children>
-      <TextField fx:id="startinganimals" layoutX="425.0" layoutY="178.0" />
-      <TextField fx:id="energyloss" layoutX="425.0" layoutY="228.0" />
-      <TextField fx:id="reproductionThreshold" layoutX="427.0" layoutY="279.0" />
-      <TextField fx:id="energyforreproduction" layoutX="427.0" layoutY="326.0" />
-      <Text layoutX="424.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poczatkowa ilosc zwierzakow" />
-      <Text layoutX="73.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Symulator Ewolucyjny" textAlignment="CENTER" wrappingWidth="464.5367259979248" AnchorPane.topAnchor="10.328125">
+      <Text layoutX="32.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Symulator Ewolucyjny" textAlignment="CENTER" wrappingWidth="331.5367259979248" AnchorPane.topAnchor="14.328125">
          <font>
             <Font name="Berlin Sans FB" size="32.0" />
          </font></Text>
-      <Text layoutX="416.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wlasciwosci zwierzat">
-         <font>
-            <Font name="Berlin Sans FB" size="20.0" />
-         </font></Text>
-      <Text layoutX="423.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Energia potrzebna do ruchu" />
-      <Text layoutX="424.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Energia potrzebna do rozmazania" />
-      <Text layoutX="423.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Energia tracona przy rozmnazaniu" />
-      <ChoiceBox fx:id="animaltype" layoutX="425.0" layoutY="132.0" prefWidth="150.0" />
-      <Text layoutX="423.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj zwierzaka" />
-      <Text layoutX="236.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wlasciwosci roslin">
-         <font>
-            <Font name="Berlin Sans FB" size="20.0" />
-         </font></Text>
-      <TextField fx:id="startingplants" layoutX="237.0" layoutY="173.0" />
-      <TextField fx:id="plantsperday" layoutX="237.0" layoutY="223.0" />
-      <Text layoutX="237.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj wyrastania" />
-      <Text layoutX="237.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poczatkowa ilosc roslin" />
-      <Text layoutX="237.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dzienny przyrost" />
-      <TextField fx:id="plantenergy" layoutX="236.0" layoutY="272.0" />
-      <Text layoutX="24.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wlasciwosci genotypow">
-         <font>
-            <Font name="Berlin Sans FB" size="20.0" />
-         </font></Text>
-      <ChoiceBox fx:id="gardenertype" layoutX="236.0" layoutY="130.0" prefWidth="150.0" />
-      <Text layoutX="240.0" layoutY="269.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Energia roslin" />
-      <TextField fx:id="minmutations" layoutX="44.0" layoutY="396.0" />
-      <Text layoutX="44.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimalna liczba mutacji" />
-      <Text layoutX="42.0" layoutY="435.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maksymalna liczba mutacji" />
-      <ChoiceBox fx:id="genotype" layoutX="44.0" layoutY="312.0" prefWidth="150.0" />
-      <Text layoutX="45.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj genotypu" />
-      <Text layoutX="433.0" layoutY="398.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wczytaj z pliku">
-         <font>
-            <Font name="Berlin Sans FB" size="20.0" />
-         </font>
-      </Text>
-      <TextField fx:id="filepath" layoutX="422.0" layoutY="405.0" />
-      <Button fx:id="startsimul" layoutX="243.0" layoutY="488.0" mnemonicParsing="false" text="Rozpocznij symulacje" />
-      <TextField fx:id="genotypelength" layoutX="46.0" layoutY="356.0" />
-      <Text layoutX="46.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dlugosc genotypu" />
-      <Button fx:id="loadfile" layoutX="467.0" layoutY="439.0" mnemonicParsing="false" text="Wczytaj" />
-      <TextField layoutX="237.0" layoutY="405.0" />
-      <TextField fx:id="maxmutations" layoutX="44.0" layoutY="439.0" />
-      <Label layoutX="216.0" layoutY="385.0" text="Czas miedzy dniami(ms)">
-         <font>
-            <Font name="Berlin Sans FB" size="19.0" />
-         </font>
-      </Label>
-      <VBox layoutX="231.0" layoutY="240.0" prefHeight="200.0" prefWidth="100.0" />
-      <Text layoutX="42.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wlasciwosci Mapy">
-         <font>
-            <Font name="Berlin Sans FB" size="20.0" />
-         </font>
-      </Text>
-      <Text layoutX="42.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj Mapy" />
-      <ChoiceBox fx:id="maptype" layoutX="42.0" layoutY="125.0" prefWidth="150.0" />
-      <Text layoutX="42.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Szerokosc (maks.100)" />
-      <TextField fx:id="mapwidth" layoutX="42.0" layoutY="169.0" />
-      <Text layoutX="42.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Wysokość(maks.100)" />
-      <TextField fx:id="mapheight" layoutX="42.0" layoutY="211.0" />
+      <Button layoutX="127.0" layoutY="571.0" mnemonicParsing="false" onAction="#startSimul" text="Rozpocznij symulacje" />
+      <VBox layoutX="219.0" layoutY="292.0" prefHeight="200.0" prefWidth="129.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Genotyp">
+               <font>
+                  <Font name="Berlin Sans FB" size="20.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj genotypu" />
+            <ChoiceBox fx:id="genotype" prefWidth="150.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dlugosc genotypu" />
+            <TextField fx:id="genotypeLength" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Minimalna liczba mutacji" />
+            <TextField fx:id="minMutations" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Maksymalna liczba mutacji" />
+            <TextField fx:id="maxMutations" />
+         </children></VBox>
+      <VBox layoutX="24.0" layoutY="57.0" prefHeight="159.0" prefWidth="142.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mapa">
+               <font>
+                  <Font name="Berlin Sans FB" size="20.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj Mapy" />
+            <ChoiceBox fx:id="mapType" prefWidth="150.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Szerokosc (maks.100)" />
+            <TextField fx:id="mapWidth" prefHeight="25.0" prefWidth="148.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wysokość(maks.100)" />
+            <TextField fx:id="mapHeight" />
+         </children>
+      </VBox>
+      <VBox layoutX="219.0" layoutY="57.0" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rosliny">
+               <font>
+                  <Font name="Berlin Sans FB" size="20.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj wyrastania" />
+            <ChoiceBox fx:id="gardenerType" prefWidth="150.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poczatkowa ilosc roslin" />
+            <TextField fx:id="startingPlants" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dzienny przyrost" />
+            <TextField fx:id="plantsPerDay" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Energia roslin" />
+            <TextField fx:id="plantEnergy" />
+         </children>
+      </VBox>
+      <VBox layoutX="101.0" layoutY="511.0" prefHeight="60.0" prefWidth="194.0">
+         <children>
+            <Label text="Czas miedzy dniami(ms)">
+               <font>
+                  <Font name="Berlin Sans FB" size="19.0" />
+               </font>
+            </Label>
+            <TextField fx:id="sleepTime" />
+         </children>
+      </VBox>
+      <VBox layoutX="92.0" layoutY="613.0" prefHeight="52.0" prefWidth="127.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Lub podaj sciezke do pliku">
+               <font>
+                  <Font name="Berlin Sans FB" size="20.0" />
+               </font>
+            </Text>
+            <TextField fx:id="filePath" />
+         </children>
+      </VBox>
+      <VBox layoutX="24.0" layoutY="208.0" prefHeight="264.0" prefWidth="157.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zwierzeta">
+               <font>
+                  <Font name="Berlin Sans FB" size="20.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Rodzaj zwierzaka" />
+            <ChoiceBox fx:id="animalType" prefWidth="150.0" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poczatkowa ilosc zwierzakow" />
+            <TextField fx:id="startingAnimals" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Początkowa energia" />
+            <TextField fx:id="startingEnergy" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Energia potrzebna do ruchu" />
+            <TextField fx:id="energyLoss" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Min energi do rozmazania" />
+            <TextField fx:id="reproductionThreshold" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Energia dziecka" />
+            <TextField fx:id="energyForReproduction" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
