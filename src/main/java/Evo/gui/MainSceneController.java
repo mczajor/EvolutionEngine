@@ -8,10 +8,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 
 public class MainSceneController {
+
     ObservableList<String> mapTypes = FXCollections.observableArrayList("Piekielny portal", "Kulista planeta");
     ObservableList<String> animalTypes = FXCollections.observableArrayList("Detereministyczne", "Losowe");
     ObservableList<String> grassTypes = FXCollections.observableArrayList("Zalesione stepy", "Toksyczne trupy");
-    ObservableList<String> genotypeTypes = FXCollections.observableArrayList("Pełna losowosc", "Lekka korekta");
+    ObservableList<String> genotypeTypes = FXCollections.observableArrayList("Pelna losowosc", "Lekka korekta");
     @FXML
     private ChoiceBox<String> animaltype;
 

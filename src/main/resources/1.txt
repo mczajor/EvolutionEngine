@@ -8,7 +8,7 @@ plantEnergy:100
 plantsPerDay:20
 
 animalType:1
-startAnimals:100
+startAnimals:200
 animalEnergy:200
 energyLoss:40
 energyForReproduction:100
