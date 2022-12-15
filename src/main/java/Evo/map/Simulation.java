@@ -27,8 +27,10 @@ public class Simulation {
 
         if(mapType == 0){
             this.map = new HellPortal(width, height, energyLoss, reproductionThreshold);
-        } else{
+        } else if(mapType == 1){
             this.map = new SphericalWorld(width, height, energyLoss, reproductionThreshold);
+        } else{
+            throw new IllegalArgumentException("Map type must be 0 or 1");
         }
 
         this.plantsPerDay = plantsPerDay;
@@ -36,9 +38,11 @@ public class Simulation {
         if(gardenerType == 0){
             gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
             underTaker = new InformantUnderTaker(this.map, gardener);
-        } else{
+        } else if(gardenerType == 1){
             gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
             underTaker = new UnderTaker(this.map);
+        } else{
+            throw new IllegalArgumentException("Gardener type must be 0 or 1");
         }
 
         this.map.addUnderTaker(underTaker);
@@ -50,10 +54,12 @@ public class Simulation {
                 animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
                         genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-            } else{
+            } else if(animalType == 1){
                 animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
                         genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
+            } else {
+                throw new IllegalArgumentException("Animal type must be 0 or 1");
             }
             if(map.place(animal)){
                 this.abstractAnimals.add(animal);
@@ -109,6 +115,9 @@ public class Simulation {
                 this.abstractAnimals.add(animal);
             }
         }
+    }
+    public MoveVector getBoundry(){
+        return new MoveVector(width, height);
     }
     public void run(){
         MapVisualizer visualizer = new MapVisualizer(this.map);
