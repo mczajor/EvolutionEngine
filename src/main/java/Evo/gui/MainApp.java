@@ -9,11 +9,7 @@ public class MainApp extends Application {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/Evo.gui/Mainscene.fxml"));
             javafx.scene.Parent root = loader.load();
             primaryStage.setTitle("Evolution Simulator");
-            primaryStage.setScene(new javafx.scene.Scene(root, 405, 702));
+            primaryStage.setScene(new javafx.scene.Scene(root, 460, 710));
             primaryStage.show();
-        }
-
-        public static void main(String[] args) {
-            launch(args);
         }
 }

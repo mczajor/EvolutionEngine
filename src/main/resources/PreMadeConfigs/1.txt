@@ -9,12 +9,12 @@ plantsPerDay:20
 
 animalType:1
 startAnimals:200
-animalEnergy:200
+startEnergy:200
 energyLoss:40
 energyForReproduction:100
 reproductionThreshold:155
 
 genomeType:0
 genomeLength:16
-minGenomeMutation:5
-maxGenomeMutation:10
+minGenomeMutations:5
+maxGenomeMutations:10

@@ -10,121 +10,122 @@ import java.util.Collections;
 import java.util.Map;
 
 public class Simulation {
-    int mapType;
-    int width;
-    int height;
-
-    int gardenerType;
-    int startPlants;
-    int plantEnergy;
-    int grassPerDay;
-
-    int animalType;
-    int startAnimals;
-    int startEnergy;
-    int energyLoss;
-    int energyForReproduction;
-    int reproductionThreshold;
-
-    int genomeType;
-    int genomeLength;
-    int minGenomeMutations;
-    int maxGenomeMutations;
-
+    private final int width;
+    private final int height;
+    private final AbstractWorldMap map;
+    private final AbstractGardener gardener;
+    private final AbstractUnderTaker underTaker;
+    private final int plantsPerDay;
+    private final ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
     public Simulation(int mapType, int width, int height,
-                      int gardenerType, int startPlants, int plantEnergy, int grassPerDay,
+                      int gardenerType, int startPlants, int plantEnergy, int plantsPerDay,
                       int animalType, int startAnimals, int startEnergy, int energyLoss, int energyForReproduction, int reproductionThreshold,
                       int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
-        this.mapType = mapType;
+
         this.width = width;
         this.height = height;
 
-        this.gardenerType = gardenerType;
-        this.startPlants = startPlants;
-        this.plantEnergy = plantEnergy;
-        this.grassPerDay = grassPerDay;
+        if(mapType == 0){
+            this.map = new HellPortal(width, height, energyLoss, reproductionThreshold);
+        } else{
+            this.map = new SphericalWorld(width, height, energyLoss, reproductionThreshold);
+        }
 
-        this.animalType = animalType;
-        this.startAnimals = startAnimals;
-        this.startEnergy = startEnergy;
-        this.energyLoss = energyLoss;
-        this.energyForReproduction = energyForReproduction;
-        this.reproductionThreshold = reproductionThreshold;
+        this.plantsPerDay = plantsPerDay;
 
-        this.genomeType = genomeType;
-        this.genomeLength = genomeLength;
-        this.minGenomeMutations = minGenomeMutations;
-        this.maxGenomeMutations = maxGenomeMutations;
+        if(gardenerType == 0){
+            gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
+            underTaker = new InformantUnderTaker(this.map, gardener);
+        } else{
+            gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
+            underTaker = new UnderTaker(this.map);
+        }
+
+        this.map.addUnderTaker(underTaker);
+        this.map.addGardener(gardener);
+
+        for (int i = 0; i < startAnimals; i++){
+            AbstractAnimal animal;
+            if(animalType == 0){
+                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+                        startEnergy, energyForReproduction,
+                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
+            } else{
+                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+                        startEnergy, energyForReproduction,
+                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
+            }
+            if(map.place(animal)){
+                this.abstractAnimals.add(animal);
+            }
+        }
     }
 
     public Simulation(Path path) throws IOException, NumberFormatException {
         //Path path = Paths.get("src/main/resources/PreMadeConfigs/1.txt");
-        Map<String, Integer> map = FileReader.byStream(path);
-        this.mapType = map.get("mapType");
-        this.width = map.get("width");
-        this.height = map.get("height");
+        Map<String, Integer> options = FileReader.byStream(path);
+        this.width = options.get("width");
+        this.height = options.get("height");
 
-        this.gardenerType = map.get("gardenerType");
-        this.startPlants = map.get("startPlants");
-        this.plantEnergy = map.get("plantEnergy");
-        this.grassPerDay = map.get("plantsPerDay");
-
-        this.animalType = map.get("animalType");
-        this.startAnimals = map.get("startAnimals");
-        this.startEnergy = map.get("animalEnergy");
-        this.energyLoss = map.get("energyLoss");
-        this.energyForReproduction = map.get("energyForReproduction");
-        this.reproductionThreshold = map.get("reproductionThreshold");
-
-        this.genomeType = map.get("genomeType");
-        this.genomeLength = map.get("genomeLength");
-        this.minGenomeMutations = map.get("minGenomeMutation");
-        this.maxGenomeMutations = map.get("maxGenomeMutation");
-    }
-    public void run(){
-        AbstractWorldMap map;
-        if(mapType == 0){
-            map = new HellPortal(this.width, this.height, this.energyLoss, this.reproductionThreshold);
+        if(options.get("mapType") == 0){
+            this.map = new HellPortal(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
         } else{
-            map = new SphericalWorld(this.width, this.height, this.energyLoss, this.reproductionThreshold);
+            this.map = new SphericalWorld(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
         }
-        MapVisualizer visualizer = new MapVisualizer(map);
-        AbstractGardener gardener;
-        AbstractUnderTaker underTaker;
-        if(gardenerType == 0){
-            gardener = new NecrophobicGardener(map, this.width, this.height, this.startPlants, this.plantEnergy);
-            underTaker = new InformantUnderTaker(map, gardener);
+
+        this.plantsPerDay = options.get("plantsPerDay");
+
+        if(options.get("gardenerType") == 0){
+            gardener = new NecrophobicGardener(this.map, width, height, options.get("startPlants"), options.get("plantEnergy"));
+            underTaker = new InformantUnderTaker(this.map, gardener);
         } else{
-            gardener = new EquatorGardener(map, this.width, this.height, this.startPlants, this.plantEnergy);
-            underTaker = new UnderTaker(map);
+            gardener = new EquatorGardener(this.map, width, height, options.get("startPlants"), options.get("plantEnergy"));
+            underTaker = new UnderTaker(this.map);
         }
-        ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
-        map.addUnderTaker(underTaker);
-        map.addGardener(gardener);
-        for (int i = 0; i < this.startAnimals; i++){
+
+        this.map.addUnderTaker(underTaker);
+        this.map.addGardener(gardener);
+
+        int animalType = options.get("animalType");
+        int startEnergy = options.get("startEnergy");
+        int energyForReproduction = options.get("energyForReproduction");
+        int genomeType = options.get("genomeType");
+        int genomeLength = options.get("genomeLength");
+        int minGenomeMutations = options.get("minGenomeMutations");
+        int maxGenomeMutations = options.get("maxGenomeMutations");
+
+        for (int i = 0; i < options.get("startAnimals"); i++){
             AbstractAnimal animal;
-            if(this.animalType == 0){
-                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*this.width), (int)(Math.random()*this.height)), map, this.startEnergy, this.energyForReproduction, this.genomeType, this.genomeLength, this.minGenomeMutations, this.maxGenomeMutations);
+            if(animalType == 0){
+                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+                        startEnergy, energyForReproduction,
+                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
             } else{
-                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*this.width), (int)(Math.random()*this.height)), map, this.startEnergy, this.energyForReproduction, this.genomeType, this.genomeLength, this.minGenomeMutations, this.maxGenomeMutations);
+                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+                        startEnergy, energyForReproduction,
+                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
             }
             if(map.place(animal)){
-                abstractAnimals.add(animal);
+                this.abstractAnimals.add(animal);
             }
         }
+    }
+    public void run(){
+        MapVisualizer visualizer = new MapVisualizer(this.map);
+
         //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
         for(int i = 0; i < 10000; i++){
             //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
-            underTaker.buryTheDead();
-            abstractAnimals.removeIf(AbstractAnimal::isDead);
+            this.underTaker.buryTheDead();
+            this.abstractAnimals.removeIf(AbstractAnimal::isDead);
             Collections.shuffle(abstractAnimals);
-            abstractAnimals.forEach(AbstractAnimal::move);
-            map.feast();
-            abstractAnimals.addAll(map.mingle());
-            gardener.plant(grassPerDay);
+            this.abstractAnimals.forEach(AbstractAnimal::move);
+            this.map.feast();
+            this.abstractAnimals.addAll(map.mingle());
+            this.gardener.plant(this.plantsPerDay);
         }
-        for(AbstractAnimal abstractAnimal : abstractAnimals) {
-            System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition() + " Genotype: " + abstractAnimal.isRandom());}
-        System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
+        //for(AbstractAnimal abstractAnimal : abstractAnimals) {
+        //    System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition() + " Genotype: " + abstractAnimal.isRandom());}
+        System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(this.width-1, this.height-1)));
     }
 }

@@ -9,11 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -82,12 +82,12 @@ public class MainSceneController {
 
     @FXML
     void startSimul(ActionEvent event) {
-        try{
+        try {
             Simulation simulation;
-            if (!this.filePath.getText().equals("")){
+            if (!this.filePath.getText().equals("")) {
                 Path path = Paths.get("src/main/resources/PreMadeConfigs/" + this.filePath.getText() + ".txt");
                 simulation = new Simulation(path);
-            } else{
+            } else {
                 int mapType = this.mapType.getSelectionModel().getSelectedIndex();
                 int mapWidth = Integer.parseInt(this.mapWidth.getText());
                 int mapHeight = Integer.parseInt(this.mapHeight.getText());
@@ -110,20 +110,28 @@ public class MainSceneController {
                 int maxMutations = Integer.parseInt(this.maxMutations.getText());
                 int sleepTime = Integer.parseInt(this.sleepTime.getText());
                 simulation = new Simulation(mapType, mapWidth, mapHeight,
-                            gardenerType, startingPlants, plantEnergy, plantsPerDay,
-                            animalType, startingAnimals, startingEnergy, energyLoss, energyForReproduction, reproductionThreshold,
-                            genomeType, genotypeLength, minMutations, maxMutations);
-                }
-            /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/SimulationScene.fxml"));
+                        gardenerType, startingPlants, plantEnergy, plantsPerDay,
+                        animalType, startingAnimals, startingEnergy, energyLoss, energyForReproduction, reproductionThreshold,
+                        genomeType, genotypeLength, minMutations, maxMutations);
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/SimulationScene.fxml"));
+            //System.out.println(loader.getLocation());
             Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
-            stage.show();*/
+            //SimulationSceneController controller = loader.getController();
+            Stage simulationStage = new Stage();
+            simulationStage.setTitle("Evolution Simulator");
+            simulationStage.setScene(scene);
+            simulationStage.show();
             simulation.run();
 
+        } catch (IOException e){
+            System.err.println("Plik nie istnieje albo nie ma uprawnien do odczytu");
+        }   catch (NumberFormatException | NullPointerException e){
+            System.err.println("Podane dane są niepoprawne");
         } catch(Exception e){
-            System.out.println(e.getMessage());
-            e.getStackTrace();
+            //System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
     @FXML
