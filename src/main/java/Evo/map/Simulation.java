@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-public class Simulation {
+public class Simulation implements Runnable{
     private final int width;
     private final int height;
     private final AbstractWorldMap map;
