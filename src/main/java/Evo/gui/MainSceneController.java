@@ -84,7 +84,7 @@ public class MainSceneController {
     void startSimul(ActionEvent event) {
         try {
             Simulation simulation;
-            if (!this.filePath.getText().equals("")) {
+                if (!this.filePath.getText().equals("")) {
                 Path path = Paths.get("src/main/resources/PreMadeConfigs/" + this.filePath.getText() + ".txt");
                 simulation = new Simulation(path);
             } else {
@@ -117,8 +117,12 @@ public class MainSceneController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/SimulationScene.fxml"));
             //System.out.println(loader.getLocation());
             Parent root = loader.load();
+            SimulationSceneController controller = loader.getController();
+            controller.setSimulation(simulation);
+            System.out.println(simulation.getBoundry());
+            controller.setBoundries(simulation.getBoundry());
+            controller.initializeGrid();
             Scene scene = new Scene(root);
-            //SimulationSceneController controller = loader.getController();
             Stage simulationStage = new Stage();
             simulationStage.setTitle("Evolution Simulator");
             simulationStage.setScene(scene);
