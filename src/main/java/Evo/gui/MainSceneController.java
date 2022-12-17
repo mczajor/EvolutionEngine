@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -118,16 +117,20 @@ public class MainSceneController {
             //System.out.println(loader.getLocation());
             Parent root = loader.load();
             SimulationSceneController controller = loader.getController();
-            controller.setSimulation(simulation);
-            System.out.println(simulation.getBoundry());
-            controller.setBoundries(simulation.getBoundry());
-            controller.initializeGrid();
             Scene scene = new Scene(root);
             Stage simulationStage = new Stage();
             simulationStage.setTitle("Evolution Simulator");
             simulationStage.setScene(scene);
+            simulationStage.setOnCloseRequest(event1 -> {
+                controller.stopSimulation();
+            });
+
+            controller.startSimulation();
+            controller.setSimulation(simulation);
+            controller.setBoundries(simulation.getBoundry());
+            controller.initializeGrid();
+
             simulationStage.show();
-            simulation.run();
 
         } catch (IOException e){
             System.err.println("Plik nie istnieje albo nie ma uprawnien do odczytu");

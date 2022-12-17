@@ -24,4 +24,4 @@ test {
     useJUnitPlatform()
 }
 
-mainClassName = 'Evo.gui.MainApp'
+mainClassName = 'Evo.gui.Main'

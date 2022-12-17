@@ -1,5 +1,7 @@
 package Evo.map.elements;
 import Evo.map.world.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 
@@ -17,7 +19,7 @@ public abstract class AbstractAnimal implements IMapElement {
     protected boolean isDead = false;
     protected static int energyForReproduction;
     protected static int genoType;
-
+    protected Circle circle = new Circle();
     //Constructor for initial animals
     public AbstractAnimal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy,int speciesGenotype, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
         this.position = position;
@@ -82,7 +84,6 @@ public abstract class AbstractAnimal implements IMapElement {
     public void addChildren(){
         this.children++;
     }
-
     public int[] getGenotype(){
         return this.abstractGenotype.getGenotype();
     }
@@ -98,6 +99,10 @@ public abstract class AbstractAnimal implements IMapElement {
     }
     public void addEnergy(int energy){
         this.energy += energy;
+    }
+    public Circle getCircle(){
+        this.circle.setFill(new Color(1.0, 0, 0, 1));
+        return this.circle;
     }
     public void eat(Plant plant){
         this.addEnergy(plant.getEnergy());

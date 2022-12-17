@@ -32,6 +32,9 @@ public abstract class AbstractWorldMap implements IPositionObserver {
     public MoveVector getDimensions(){
         return new MoveVector(this.width, this.height);
     }
+    public Map<MoveVector, AbstractAnimal> getMap(){
+        return this.mapAnimals.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
+    }
 
     public IMapElement objectAt(MoveVector position){
         if(this.mapAnimals.get(position) == null || this.mapAnimals.get(position).isEmpty())

@@ -3,6 +3,7 @@ import Evo.map.elements.MoveVector;
 import Evo.map.elements.Plant;
 import Evo.map.world.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,9 @@ public abstract class AbstractGardener {
         this.height = height;
         this.plantEnergy = plantEnergy;
 
+    }
+    public Map<MoveVector, Plant> getPlants(){
+        return this.plantMap;
     }
     public Plant plantAt(MoveVector position){
         return plantMap.get(position);
