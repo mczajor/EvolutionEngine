@@ -8,11 +8,12 @@ import Evo.map.elements.Plant;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.chart.LineChart;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class SimulationSceneController implements Runnable {
@@ -22,6 +23,23 @@ public class SimulationSceneController implements Runnable {
     private int width;
     private int height;
     private int sleepTime;
+    @FXML
+    private Label AgeBeforeDeath;
+
+    @FXML
+    private Label AmountofAnimals;
+
+    @FXML
+    private Label AmountofPlants;
+
+    @FXML
+    private Label AverageEnergy;
+
+    @FXML
+    private Label BestGenotype;
+
+    @FXML
+    private Label EmptySpaces;
     @FXML
     private GridPane MapGrid;
     @FXML
@@ -35,8 +53,8 @@ public class SimulationSceneController implements Runnable {
     }
     public void setVariables(Simulation simulation, MoveVector boundry){
         this.simulation = simulation;
-        this.width = boundry.x;
-        this.height = boundry.y;
+        this.width = boundry.x+1;
+        this.height = boundry.y+1;
         this.sleepTime = simulation.getSleepTime();
     }
     public void initializeGrid(){
@@ -53,9 +71,10 @@ public class SimulationSceneController implements Runnable {
             }
         }
     }
-    public void updateGrid(){
+    public void updateScene(){
         Map<MoveVector, Plant> plants= simulation.getListPlants();
         Map<MoveVector, AbstractAnimal> animals = simulation.getAnimals();
+        ArrayList<Float> stats = simulation.getStats();
         for(Node child: this.MapGrid.getChildren()){
             StackPane pane = (StackPane) child;
             pane.getChildren().clear();
@@ -71,6 +90,11 @@ public class SimulationSceneController implements Runnable {
                 pane.getChildren().add(circle);
             }
         }
+        AmountofAnimals.setText(String.format("%.0f", stats.get(0)));
+        AmountofPlants.setText(String.format("%.0f", stats.get(1)));
+        EmptySpaces.setText(String.format("%.0f", stats.get(2)));
+        AverageEnergy.setText(String.format("%.2f", stats.get(3)));
+        AgeBeforeDeath.setText(String.format("%.2f", stats.get(4))+" days");
     }
     public void updateChart(){
         //TODO
@@ -90,10 +114,7 @@ public class SimulationSceneController implements Runnable {
                 break;
             }
             this.simulation.simulateDay();
-            Platform.runLater(() -> {
-                updateGrid();
-                updateChart();
-            });
+            Platform.runLater(this::updateScene);
         }
     }
 }

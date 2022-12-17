@@ -100,7 +100,13 @@ public abstract class AbstractAnimal implements IMapElement {
         this.energy += energy;
     }
     public Circle getCircle(){
-        this.circle.setFill(new Color(1.0, 0, 0, 1));
+        double ratio = (double)energyForReproduction/this.energy;
+        if(ratio > 9){
+            ratio = 9;
+        } else if(ratio < 1){
+            ratio = 1;
+        }
+        this.circle.setFill(new Color(1.0, ratio*0.1, ratio*0.1, 1));
         return this.circle;
     }
     public void eat(Plant plant){

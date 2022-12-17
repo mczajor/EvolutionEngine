@@ -1,6 +1,6 @@
 mapType:1
-width:50
-height:100
+width:500
+height:500
 
 plantGrowthType:0
 startPlants:1000

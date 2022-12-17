@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public abstract class AbstractUnderTaker {
     protected AbstractWorldMap map;
     protected ArrayList<AbstractAnimal> potentialyDeadAbstractAnimals = new ArrayList<>();
+    protected int deadAnimals = 0;
+    protected int agesofDeadAnimals = 0;
 
     public AbstractUnderTaker(AbstractWorldMap map){
         this.map = map;
@@ -17,6 +19,8 @@ public abstract class AbstractUnderTaker {
             if(abstractAnimal.getEnergy() > 0){
                 continue;
             }
+            agesofDeadAnimals += abstractAnimal.getAge();
+            deadAnimals++;
             map.removeAnimal(abstractAnimal);
             abstractAnimal.die();
         }
@@ -24,5 +28,13 @@ public abstract class AbstractUnderTaker {
     }
     public void addDyingAnimal(AbstractAnimal abstractAnimal){
         potentialyDeadAbstractAnimals.add(abstractAnimal);
+    }
+    public double getAverageAgeOfDeadAnimals(){
+        if(deadAnimals == 0){
+            return 0;
+        }
+        else{
+            return (double)agesofDeadAnimals/deadAnimals;
+        }
     }
 }

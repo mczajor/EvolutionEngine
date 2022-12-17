@@ -143,4 +143,13 @@ public class Simulation{
             this.abstractAnimals.addAll(map.mingle());
             this.gardener.plant(this.plantsPerDay);
     }
+    public ArrayList<Float> getStats(){
+        ArrayList<Float> stats = new ArrayList<>();
+        stats.add( (float) this.abstractAnimals.size());
+        stats.add( (float) this.gardener.getPlants().size());
+        stats.add( (float) (this.width*this.height - this.abstractAnimals.size()));
+        stats.add( (float) this.abstractAnimals.stream().mapToInt(AbstractAnimal::getEnergy).average().orElse(0));
+        stats.add( (float) this.underTaker.getAverageAgeOfDeadAnimals());
+        return stats;
+    }
 }
