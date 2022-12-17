@@ -124,10 +124,12 @@ public class MainSceneController {
             controller.initializeGrid();
             Scene scene = new Scene(root);
             Stage simulationStage = new Stage();
+            Thread thread = new Thread(controller);
+            thread.setDaemon(true);
+            thread.start();
             simulationStage.setTitle("Evolution Simulator");
             simulationStage.setScene(scene);
             simulationStage.show();
-            simulation.run();
 
         } catch (IOException e){
             System.err.println("Plik nie istnieje albo nie ma uprawnien do odczytu");

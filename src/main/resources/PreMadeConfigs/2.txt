@@ -1,11 +1,11 @@
 mapType:1
-width:30
-height:30
+width:20
+height:20
 
-gardenerType:1
-startPlants:1000
+gardenerType:0
+startPlants:400
 plantEnergy:100
-plantsPerDay:100
+plantsPerDay:20
 
 animalType:1
 startAnimals:200

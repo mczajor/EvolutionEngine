@@ -119,22 +119,27 @@ public class Simulation {
     public MoveVector getBoundry(){
         return new MoveVector(width, height);
     }
-    public void run(){
-        MapVisualizer visualizer = new MapVisualizer(this.map);
+    public Map<MoveVector, AbstractAnimal> getAnimals(){
+        return map.getMap();
+    }
+    public Map<MoveVector, Plant> getListPlants(){
+        return gardener.getPlants();
+    }
+    public void simulateDay(){
+        //MapVisualizer visualizer = new MapVisualizer(this.map);
 
         //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
-        for(int i = 0; i < 10000; i++){
             //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
             this.underTaker.buryTheDead();
             this.abstractAnimals.removeIf(AbstractAnimal::isDead);
             Collections.shuffle(abstractAnimals);
+            //System.out.println("Simulation -> position: " + this.abstractAnimals.get(0).getPosition());
             this.abstractAnimals.forEach(AbstractAnimal::move);
             this.map.feast();
             this.abstractAnimals.addAll(map.mingle());
             this.gardener.plant(this.plantsPerDay);
-        }
         //for(AbstractAnimal abstractAnimal : abstractAnimals) {
         //    System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition() + " Genotype: " + abstractAnimal.isRandom());}
-        System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(this.width-1, this.height-1)));
+        //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(this.width-1, this.height-1)));
     }
 }
