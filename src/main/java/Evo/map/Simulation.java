@@ -17,10 +17,12 @@ public class Simulation{
     private final AbstractUnderTaker underTaker;
     private final int plantsPerDay;
     private final ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
+    private final int sleepTime;
     public Simulation(int mapType, int width, int height,
                       int gardenerType, int startPlants, int plantEnergy, int plantsPerDay,
                       int animalType, int startAnimals, int startEnergy, int energyLoss, int energyForReproduction, int reproductionThreshold,
-                      int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
+                      int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations,
+                      int sleepTime) throws IOException {
 
         this.width = width;
         this.height = height;
@@ -65,6 +67,7 @@ public class Simulation{
                 this.abstractAnimals.add(animal);
             }
         }
+        this.sleepTime = sleepTime;
     }
 
     public Simulation(Path path) throws IOException, NumberFormatException {
@@ -81,7 +84,7 @@ public class Simulation{
 
         this.plantsPerDay = options.get("plantsPerDay");
 
-        if(options.get("gardenerType") == 0){
+        if(options.get("plantGrowthType") == 0){
             gardener = new NecrophobicGardener(this.map, width, height, options.get("startPlants"), options.get("plantEnergy"));
             underTaker = new InformantUnderTaker(this.map, gardener);
         } else{
@@ -115,6 +118,7 @@ public class Simulation{
                 this.abstractAnimals.add(animal);
             }
         }
+        this.sleepTime = options.get("sleepTime");
     }
     public MoveVector getBoundry(){
         return new MoveVector(width, height);
@@ -125,21 +129,18 @@ public class Simulation{
     public Map<MoveVector, Plant> getListPlants(){
         return gardener.getPlants();
     }
+    public int getSleepTime(){
+        return sleepTime;
+    }
     public void simulateDay(){
-        //MapVisualizer visualizer = new MapVisualizer(this.map);
 
-        //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
-            //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(width-1, height-1)));
             this.underTaker.buryTheDead();
             this.abstractAnimals.removeIf(AbstractAnimal::isDead);
             Collections.shuffle(abstractAnimals);
-            //System.out.println("Simulation -> position: " + this.abstractAnimals.get(0).getPosition());
+
             this.abstractAnimals.forEach(AbstractAnimal::move);
             this.map.feast();
             this.abstractAnimals.addAll(map.mingle());
             this.gardener.plant(this.plantsPerDay);
-        //for(AbstractAnimal abstractAnimal : abstractAnimals) {
-        //    System.out.println("Energy: " + abstractAnimal.getEnergy() + " Age: " + abstractAnimal.getAge() + " BornOn: " + abstractAnimal.getBornOn() + " Children: " + abstractAnimal.getChildren() + " PlantsEaten: " + abstractAnimal.getPlantsEaten() + " Current Position: " + abstractAnimal.getPosition() + " Genotype: " + abstractAnimal.isRandom());}
-        //System.out.println(visualizer.draw(new MoveVector(0,0), new MoveVector(this.width-1, this.height-1)));
     }
 }

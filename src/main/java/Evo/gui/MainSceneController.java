@@ -3,7 +3,6 @@ package Evo.gui;
 import Evo.map.Simulation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,7 +79,7 @@ public class MainSceneController {
     private TextField startingPlants;
 
     @FXML
-    void startSimul(ActionEvent event) {
+    void startSimul() {
         try {
             Simulation simulation;
                 if (!this.filePath.getText().equals("")) {
@@ -111,7 +110,8 @@ public class MainSceneController {
                 simulation = new Simulation(mapType, mapWidth, mapHeight,
                         gardenerType, startingPlants, plantEnergy, plantsPerDay,
                         animalType, startingAnimals, startingEnergy, energyLoss, energyForReproduction, reproductionThreshold,
-                        genomeType, genotypeLength, minMutations, maxMutations);
+                        genomeType, genotypeLength, minMutations, maxMutations,
+                        sleepTime);
             }
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/SimulationScene.fxml"));
             //System.out.println(loader.getLocation());
@@ -121,14 +121,11 @@ public class MainSceneController {
             Stage simulationStage = new Stage();
             simulationStage.setTitle("Evolution Simulator");
             simulationStage.setScene(scene);
-            simulationStage.setOnCloseRequest(event1 -> {
-                controller.stopSimulation();
-            });
+            simulationStage.setOnCloseRequest(event1 -> controller.stopSimulation());
 
-            controller.startSimulation();
-            controller.setSimulation(simulation);
-            controller.setBoundries(simulation.getBoundry());
+            controller.setVariables(simulation, simulation.getBoundry());
             controller.initializeGrid();
+            controller.startSimulation();
 
             simulationStage.show();
 

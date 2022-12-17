@@ -53,7 +53,6 @@ public abstract class AbstractAnimal implements IMapElement {
         parent2.removeEnergy(energyForReproduction);
         parent1.addChildren();
         parent2.addChildren();
-        //this.status = ((parent1.status + parent2.status)/2 + 1);
     }
 
 

@@ -1,14 +1,14 @@
 mapType:1
-width:20
-height:20
+width:50
+height:100
 
-gardenerType:0
-startPlants:400
+plantGrowthType:0
+startPlants:1000
 plantEnergy:100
-plantsPerDay:20
+plantsPerDay:1000
 
 animalType:1
-startAnimals:200
+startAnimals:2000
 startEnergy:200
 energyLoss:40
 energyForReproduction:100
@@ -18,3 +18,5 @@ genomeType:0
 genomeLength:16
 minGenomeMutations:5
 maxGenomeMutations:10
+
+sleepTime:100

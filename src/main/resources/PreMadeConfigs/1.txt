@@ -2,7 +2,7 @@ mapType:1
 width:30
 height:30
 
-gardenerType:1
+plantGrowthType:1
 startPlants:1000
 plantEnergy:100
 plantsPerDay:100
@@ -18,3 +18,5 @@ genomeType:0
 genomeLength:16
 minGenomeMutations:5
 maxGenomeMutations:10
+
+sleepTime:500
