@@ -15,8 +15,8 @@ energyForReproduction:100
 reproductionThreshold:155
 
 genomeType:0
-genomeLength:16
+genomeLength:3
 minGenomeMutations:5
 maxGenomeMutations:10
 
-sleepTime:500
+sleepTime:100

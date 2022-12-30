@@ -5,74 +5,68 @@ import Evo.map.utility.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 public class Simulation{
-    private final int width;
-    private final int height;
-    private final AbstractWorldMap map;
-    private final AbstractGardener gardener;
-    private final AbstractUnderTaker underTaker;
-    private final int plantsPerDay;
+    private int width;
+    private int height;
+    private AbstractWorldMap map;
+    private AbstractGardener gardener;
+    private AbstractUnderTaker underTaker;
+    private int plantsPerDay;
     private final ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
-    private final int sleepTime;
+    private final Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
+    private AbstractGenotype bestGenotype = null;
+    private int bestGenotypeCount = 0;
+    private int sleepTime;
     public Simulation(int mapType, int width, int height,
                       int gardenerType, int startPlants, int plantEnergy, int plantsPerDay,
                       int animalType, int startAnimals, int startEnergy, int energyLoss, int energyForReproduction, int reproductionThreshold,
                       int genomeType, int genomeLength, int minGenomeMutations, int maxGenomeMutations,
                       int sleepTime) throws IOException {
+        Map<String, Integer> options = new HashMap<>();
 
-        this.width = width;
-        this.height = height;
+        options.put("mapType", mapType);
+        options.put("width", width);
+        options.put("height", height);
 
-        if(mapType == 0){
-            this.map = new HellPortal(width, height, energyLoss, reproductionThreshold);
-        } else if(mapType == 1){
-            this.map = new SphericalWorld(width, height, energyLoss, reproductionThreshold);
-        } else{
-            throw new IllegalArgumentException("Map type must be 0 or 1");
-        }
+        options.put("gardenerType", gardenerType);
+        options.put("startPlants", startPlants);
+        options.put("plantEnergy", plantEnergy);
+        options.put("plantsPerDay", plantsPerDay);
 
-        this.plantsPerDay = plantsPerDay;
+        options.put("animalType", animalType);
+        options.put("startAnimals", startAnimals);
+        options.put("startEnergy", startEnergy);
+        options.put("energyLoss", energyLoss);
+        options.put("energyForReproduction", energyForReproduction);
+        options.put("reproductionThreshold", reproductionThreshold);
 
-        if(gardenerType == 0){
-            gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
-            underTaker = new InformantUnderTaker(this.map, gardener);
-        } else if(gardenerType == 1){
-            gardener = new NecrophobicGardener(this.map, width, height, startPlants, plantEnergy);
-            underTaker = new UnderTaker(this.map);
-        } else{
-            throw new IllegalArgumentException("Gardener type must be 0 or 1");
-        }
+        options.put("genomeType", genomeType);
+        options.put("genomeLength", genomeLength);
+        options.put("minGenomeMutations", minGenomeMutations);
+        options.put("maxGenomeMutations", maxGenomeMutations);
 
-        this.map.addUnderTaker(underTaker);
-        this.map.addGardener(gardener);
-
-        for (int i = 0; i < startAnimals; i++){
-            AbstractAnimal animal;
-            if(animalType == 0){
-                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
-                        startEnergy, energyForReproduction,
-                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-            } else if(animalType == 1){
-                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
-                        startEnergy, energyForReproduction,
-                        genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-            } else {
-                throw new IllegalArgumentException("Animal type must be 0 or 1");
-            }
-            if(map.place(animal)){
-                this.abstractAnimals.add(animal);
+        options.put("sleepTime", sleepTime);
+        for(Integer option : options.values()){
+            if(option < 0){
+                throw new IllegalArgumentException();
             }
         }
-        this.sleepTime = sleepTime;
+        this.setVariables(options);
     }
 
-    public Simulation(Path path) throws IOException, NumberFormatException {
+    public Simulation(Path path) throws IOException, IllegalArgumentException  {
         //Path path = Paths.get("src/main/resources/PreMadeConfigs/1.txt");
         Map<String, Integer> options = FileReader.byStream(path);
+        for(Integer option : options.values()){
+            if(option < 0){
+                throw new IllegalArgumentException();
+            }
+        }
+        this.setVariables(options);
+    }
+    private void setVariables(Map<String, Integer> options) {
         this.width = options.get("width");
         this.height = options.get("height");
 
@@ -118,8 +112,48 @@ public class Simulation{
                 this.abstractAnimals.add(animal);
             }
         }
+        this.addGenotypes(this.abstractAnimals);
+
         this.sleepTime = options.get("sleepTime");
     }
+    private void addGenotypes(ArrayList<AbstractAnimal> animals2Add){
+        for(AbstractAnimal animal : animals2Add){
+            AbstractGenotype genotype = animal.getGenotype();
+            this.genotypes.putIfAbsent(genotype, 0);
+            this.genotypes.put(genotype, this.genotypes.get(genotype) + 1);
+            if(this.genotypes.get(genotype) > this.bestGenotypeCount){
+                this.bestGenotypeCount = this.genotypes.get(genotype);
+                this.bestGenotype = genotype;
+            }
+        }
+    }
+
+    private void findNewBestGenotype(){
+        int bestGenotypeCount = 0;
+        AbstractGenotype bestGenotype = null;
+        for(Map.Entry<AbstractGenotype, Integer> entry : this.genotypes.entrySet()){
+            if(entry.getValue() > bestGenotypeCount){
+                bestGenotypeCount = entry.getValue();
+                bestGenotype = entry.getKey();
+            }
+        }
+        this.bestGenotypeCount = bestGenotypeCount;
+        this.bestGenotype = bestGenotype;
+    }
+
+    private void removeGenotypes(ArrayList<AbstractAnimal> animals2Remove){
+        for(AbstractAnimal animal: animals2Remove){
+            AbstractGenotype genotype = animal.getGenotype();
+            this.genotypes.put(genotype, this.genotypes.get(genotype) - 1);
+            if(genotype == this.bestGenotype && this.genotypes.get(genotype) < this.bestGenotypeCount){
+                this.findNewBestGenotype();
+            }
+            if(this.genotypes.get(genotype) == 0){
+                this.genotypes.remove(genotype);
+            }
+        }
+    }
+
     public MoveVector getBoundry(){
         return new MoveVector(width, height);
     }
@@ -134,13 +168,15 @@ public class Simulation{
     }
     public void simulateDay(){
 
-            this.underTaker.buryTheDead();
+            this.removeGenotypes(underTaker.buryTheDead());
             this.abstractAnimals.removeIf(AbstractAnimal::isDead);
             Collections.shuffle(abstractAnimals);
 
             this.abstractAnimals.forEach(AbstractAnimal::move);
             this.map.feast();
-            this.abstractAnimals.addAll(map.mingle());
+            ArrayList<AbstractAnimal> newAnimals = map.mingle();
+            this.addGenotypes(newAnimals);
+            this.abstractAnimals.addAll(newAnimals);
             this.gardener.plant(this.plantsPerDay);
     }
     public ArrayList<Float> getStats(){
@@ -151,5 +187,8 @@ public class Simulation{
         stats.add( (float) this.abstractAnimals.stream().mapToInt(AbstractAnimal::getEnergy).average().orElse(0));
         stats.add( (float) this.underTaker.getAverageAgeOfDeadAnimals());
         return stats;
+    }
+    public int[] getBestGenotype(){
+    return this.bestGenotype.getGenotype();
     }
 }

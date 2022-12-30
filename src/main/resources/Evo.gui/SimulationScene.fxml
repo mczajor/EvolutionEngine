@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Evo.gui.SimulationSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="713.0" prefWidth="1112.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Evo.gui.SimulationSceneController">
    <children>
-      <Button fx:id="PauseButton" layoutX="81.0" layoutY="602.0" mnemonicParsing="false" onAction="#Pause" text="PauseSimulation" />
-       <GridPane fx:id="MapGrid" layoutX="270.0" prefHeight="700.0" prefWidth="700.0">
-      </GridPane>
-      <GridPane layoutX="20.0" layoutY="41.0" prefHeight="263.0" prefWidth="226.0">
+      <Button fx:id="PauseButton" layoutX="108.0" layoutY="562.0" mnemonicParsing="false" onAction="#Pause" text="Pause Simulation" />
+       <GridPane fx:id="MapGrid" layoutX="398.0" layoutY="7.0" prefHeight="700.0" prefWidth="700.0">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></GridPane>
+      <GridPane layoutX="32.0" layoutY="31.0" prefHeight="263.0" prefWidth="360.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="160.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="66.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.0" minWidth="10.0" prefWidth="140.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="256.0" minWidth="10.0" prefWidth="220.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="27.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
@@ -26,19 +30,25 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Liczba żyjących zwierząt" />
+            <Label text="Animals alive" />
             <Label fx:id="AmountofAnimals" GridPane.columnIndex="1" />
-            <Label text="Liczba roślin" GridPane.rowIndex="1" />
+            <Label text="Plants" GridPane.rowIndex="1" />
             <Label fx:id="AmountofPlants" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Wolnych pól" GridPane.rowIndex="2" />
+            <Label text="Free spaces" GridPane.rowIndex="2" />
             <Label fx:id="EmptySpaces" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Najpopularniejszy genotup" GridPane.rowIndex="3" />
-            <Label fx:id="BestGenotype" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Średni poziom energii" GridPane.rowIndex="4" />
+            <Label prefHeight="17.0" prefWidth="135.0" text="Most common genotype" GridPane.rowIndex="3" />
+            <Label fx:id="BestGenotype" alignment="CENTER" contentDisplay="CENTER" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Averge energy" GridPane.rowIndex="4" />
             <Label fx:id="AverageEnergy" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Średnia długość życia" GridPane.rowIndex="5" />
+            <Label text="Average lifespan" GridPane.rowIndex="5" />
             <Label fx:id="AgeBeforeDeath" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
+      <AnchorPane layoutX="32.0" layoutY="384.0" prefHeight="64.0" prefWidth="222.0">
+         <children>
+            <Circle fill="#ff1f1f" layoutX="30.0" layoutY="29.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label layoutX="52.0" layoutY="13.0" prefHeight="32.0" prefWidth="243.0" text="- animal, the redder the more energy it has" wrapText="true" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

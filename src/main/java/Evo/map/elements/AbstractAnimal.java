@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractAnimal implements IMapElement {
     protected MoveVector position;
@@ -19,6 +21,9 @@ public abstract class AbstractAnimal implements IMapElement {
     protected boolean isDead = false;
     protected static int energyForReproduction;
     protected static int genoType;
+    public static Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
+    public static AbstractGenotype bestGenotype;
+    public static int bestGenotypeCount = 0;
     protected Circle circle = new Circle();
     //Constructor for initial animals
     public AbstractAnimal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy,int speciesGenotype, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
@@ -27,12 +32,15 @@ public abstract class AbstractAnimal implements IMapElement {
         this.observers.add(map);
         this.energy = startEnergy;
         genoType = speciesGenotype;
+
         if(genoType == 0){
             this.abstractGenotype = new RandomGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
         }
         else{
             this.abstractGenotype = new AdjustmentGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
         }
+
+
         this.bornOn = 0;
         energyForReproduction = reproductionEnergy;
     }
@@ -40,12 +48,21 @@ public abstract class AbstractAnimal implements IMapElement {
     public AbstractAnimal(AbstractAnimal parent1, AbstractAnimal parent2){
         this.position = parent1.getPosition();
         this.orientation = Orientation.randomOrientation();
+
         if(genoType == 0){
             this.abstractGenotype = new RandomGenotype(parent1, parent2);
         }
         else{
             this.abstractGenotype = new AdjustmentGenotype(parent1, parent2);
         }
+
+        genotypes.putIfAbsent(this.abstractGenotype, 0);
+        genotypes.put(this.abstractGenotype, genotypes.get(this.abstractGenotype) + 1);
+        if(genotypes.get(this.abstractGenotype) > bestGenotypeCount){
+            bestGenotypeCount = genotypes.get(this.abstractGenotype);
+            bestGenotype = this.abstractGenotype;
+        }
+
         this.bornOn = parent1.getAge() + parent1.getBornOn();
         this.energy = 2*energyForReproduction;
         this.observers.addAll(parent1.getObservers());
@@ -83,8 +100,8 @@ public abstract class AbstractAnimal implements IMapElement {
     public void addChildren(){
         this.children++;
     }
-    public int[] getGenotype(){
-        return this.abstractGenotype.getGenotype();
+    public AbstractGenotype getGenotype(){
+        return this.abstractGenotype;
     }
     public boolean isRandom(){
         return this.abstractGenotype instanceof RandomGenotype;

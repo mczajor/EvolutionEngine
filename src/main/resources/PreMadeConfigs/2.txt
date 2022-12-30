@@ -1,8 +1,8 @@
 mapType:1
-width:500
-height:500
+width:100
+height:100
 
-plantGrowthType:0
+plantGrowthType:1
 startPlants:1000
 plantEnergy:100
 plantsPerDay:1000

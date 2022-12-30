@@ -1,6 +1,6 @@
 package Evo.map.elements;
 
-abstract class AbstractGenotype {
+public abstract class AbstractGenotype {
     protected final int[] genes;
     protected static int minMutations;
     protected static int maxMutations;
@@ -18,15 +18,15 @@ abstract class AbstractGenotype {
         this.genes = new int[length];
         int energy1 = parent1.getEnergy();
         int energy2 = parent2.getEnergy();
-        double ratio = (double)1/(energy1+energy2);
-        for(int i = 0; i < length; i++){
-            if(Math.random() <= energy1*ratio){
-                this.genes[i] = parent1.getGenotype()[i];
-            }
-            else{
-                this.genes[i] = parent2.getGenotype()[i];
-            }
+        int ratio = (int) (length * (double) energy1/(energy1+energy2));
+        double side = Math.random();
+        for (int i = 0; i < ratio; i++) {
+            this.genes[i] = parent1.getGenotype().getGenotype()[i];
         }
+        for (int i = ratio; i < length; i++) {
+            this.genes[i] = parent2.getGenotype().getGenotype()[i];
+        }
+
     }
     @Override
     public String toString(){
@@ -36,6 +36,31 @@ abstract class AbstractGenotype {
             sb.append(" ");
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof AbstractGenotype other)){
+            return false;
+        }
+        for(int i = 0; i < length; i++){
+            if(this.genes[i] != other.genes[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode(){
+        int result = 0;
+        for(int i = 0; i < length; i++){
+            result += i * this.genes[i];
+        }
+        return result;
     }
 
     public int[] getGenotype(){

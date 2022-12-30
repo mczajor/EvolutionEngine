@@ -130,12 +130,11 @@ public class MainSceneController {
             simulationStage.show();
 
         } catch (IOException e){
-            System.err.println("Plik nie istnieje albo nie ma uprawnien do odczytu");
-        }   catch (NumberFormatException | NullPointerException e){
-            System.err.println("Podane dane są niepoprawne");
-        } catch(Exception e){
-            //System.out.println(e.getMessage());
-            e.printStackTrace();
+            this.showError("Plik nie istnieje albo nie ma uprawnien do odczytu");
+            //System.err.println("chuj");
+        }   catch (IllegalArgumentException | NullPointerException e){
+            this.showError("Podane dane sa niepoprawne");
+            //System.err.println("chuj");
         }
     }
     @FXML
@@ -146,4 +145,21 @@ public class MainSceneController {
         genotype.setItems(genotypeTypes);
     }
 
+    private void showError(String error) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Evo.gui/ErrorMsg.fxml"));
+            Parent root = loader.load();
+            ErrorMsgController controller = loader.getController();
+            controller.setMsg(error);
+            Scene scene = new Scene(root);
+            Stage errorStage = new Stage();
+
+            errorStage.setTitle("Something went wrong");
+            errorStage.setScene(scene);
+            errorStage.show();
+
+        } catch(IOException e){
+            System.err.println("Plik nie istnieje albo nie ma uprawnien do odczytu");
+        }
+    }
 }

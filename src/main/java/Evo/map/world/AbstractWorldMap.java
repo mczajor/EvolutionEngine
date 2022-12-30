@@ -112,8 +112,8 @@ public abstract class AbstractWorldMap implements IPositionObserver {
         return parents;
     }
 
-    public List<AbstractAnimal> mingle(){
-        List<AbstractAnimal> children = new ArrayList<>();
+    public ArrayList<AbstractAnimal> mingle(){
+        ArrayList<AbstractAnimal> children = new ArrayList<>();
         for(MoveVector key: this.mapAnimals.keySet()) {
             AbstractAnimal[] parents = chooseParents(this.mapAnimals.get(key).stream().filter(animal -> animal.getEnergy() > this.reproductionThreshold).toList());
             if (parents == null){

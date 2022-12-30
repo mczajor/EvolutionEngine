@@ -20,7 +20,7 @@ public class FileReader {
                     });
         } catch (IOException e) {
             throw new IOException("File with given path does not exist or is not readable");
-        } catch(NumberFormatException e){
+        } catch(IllegalArgumentException e){
             throw new NumberFormatException("File is formatted incorrectly");
         }
         return map;

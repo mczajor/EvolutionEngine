@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 public class SimulationSceneController implements Runnable {
@@ -58,10 +59,10 @@ public class SimulationSceneController implements Runnable {
         this.sleepTime = simulation.getSleepTime();
     }
     public void initializeGrid(){
-        for(int i = 0; i<this.width;i++){
+        for(int i = 0; i<this.width-1;i++){
             MapGrid.getColumnConstraints().add(new javafx.scene.layout.ColumnConstraints((double)GRIDSIZE/this.width));
         }
-        for(int i = 0; i<this.height;i++){
+        for(int i = 0; i<this.height-1;i++){
             MapGrid.getRowConstraints().add(new javafx.scene.layout.RowConstraints((double)GRIDSIZE/this.height));
         }
         for (int i = 0; i < this.width; i++) {
@@ -79,8 +80,8 @@ public class SimulationSceneController implements Runnable {
             StackPane pane = (StackPane) child;
             pane.getChildren().clear();
             pane.setStyle("-fx-background-color:#633f01");
-            int row = MapGrid.getRowIndex(child);
-            int column = MapGrid.getColumnIndex(child);
+            int row = GridPane.getRowIndex(child);
+            int column = GridPane.getColumnIndex(child);
             if(plants.containsKey(new MoveVector(column,row))){
                 pane.setStyle("-fx-background-color: #00ff00");
             }
@@ -95,9 +96,7 @@ public class SimulationSceneController implements Runnable {
         EmptySpaces.setText(String.format("%.0f", stats.get(2)));
         AverageEnergy.setText(String.format("%.2f", stats.get(3)));
         AgeBeforeDeath.setText(String.format("%.2f", stats.get(4))+" days");
-    }
-    public void updateChart(){
-        //TODO
+        BestGenotype.setText(Arrays.toString(simulation.getBestGenotype()));
     }
     public void startSimulation(){
         thread = new Thread(this);
