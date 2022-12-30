@@ -57,7 +57,6 @@ public class Simulation{
     }
 
     public Simulation(Path path) throws IOException, IllegalArgumentException  {
-        //Path path = Paths.get("src/main/resources/PreMadeConfigs/1.txt");
         Map<String, Integer> options = FileReader.byStream(path);
         for(Integer option : options.values()){
             if(option < 0){
@@ -69,12 +68,11 @@ public class Simulation{
     private void setVariables(Map<String, Integer> options) {
         this.width = options.get("width");
         this.height = options.get("height");
-
-        if(options.get("mapType") == 0){
-            this.map = new HellPortal(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
-        } else{
-            this.map = new SphericalWorld(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
-        }
+        this.map = switch(options.get("mapType")){
+            case 0 -> new HellPortal(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
+            case 1 -> new SphericalWorld(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
+            default -> throw new IllegalArgumentException();
+        };
 
         this.plantsPerDay = options.get("plantsPerDay");
 
@@ -98,16 +96,15 @@ public class Simulation{
         int maxGenomeMutations = options.get("maxGenomeMutations");
 
         for (int i = 0; i < options.get("startAnimals"); i++){
-            AbstractAnimal animal;
-            if(animalType == 0){
-                animal = new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+            AbstractAnimal animal = switch(animalType){
+                case 0 -> new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
                         genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-            } else{
-                animal = new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
+                case 1 -> new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
                         genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-            }
+                default -> throw new IllegalArgumentException();
+            };
             if(map.place(animal)){
                 this.abstractAnimals.add(animal);
             }

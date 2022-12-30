@@ -33,13 +33,11 @@ public abstract class AbstractAnimal implements IMapElement {
         this.energy = startEnergy;
         genoType = speciesGenotype;
 
-        if(genoType == 0){
-            this.abstractGenotype = new RandomGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
-        }
-        else{
-            this.abstractGenotype = new AdjustmentGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
-        }
-
+        this.abstractGenotype = switch (genoType) {
+            case 0 -> new RandomGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
+            case 1 -> new AdjustmentGenotype(genomeLength, minGenomeMutations, maxGenomeMutations);
+            default -> throw new IllegalStateException("Unexpected value: " + genoType);
+        };
 
         this.bornOn = 0;
         energyForReproduction = reproductionEnergy;
@@ -48,13 +46,24 @@ public abstract class AbstractAnimal implements IMapElement {
     public AbstractAnimal(AbstractAnimal parent1, AbstractAnimal parent2){
         this.position = parent1.getPosition();
         this.orientation = Orientation.randomOrientation();
-
-        if(genoType == 0){
-            this.abstractGenotype = new RandomGenotype(parent1, parent2);
-        }
-        else{
-            this.abstractGenotype = new AdjustmentGenotype(parent1, parent2);
-        }
+        double side = Math.random();
+        this.abstractGenotype = switch (genoType) {
+            case 0 -> {
+                if(side < 0.5){
+                    yield new RandomGenotype(parent1, parent2);
+                } else {
+                    yield new RandomGenotype(parent2, parent1);
+                }
+            }
+            case 1 -> {
+                if(side < 0.5){
+                    yield new AdjustmentGenotype(parent1, parent2);
+                } else {
+                    yield new AdjustmentGenotype(parent2, parent1);
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + genoType);
+        };
 
         genotypes.putIfAbsent(this.abstractGenotype, 0);
         genotypes.put(this.abstractGenotype, genotypes.get(this.abstractGenotype) + 1);
