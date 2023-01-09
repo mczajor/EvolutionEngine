@@ -1,14 +1,14 @@
 mapType:1
-width:30
-height:30
+width:3
+height:3
 
 plantGrowthType:1
-startPlants:1000
+startPlants:2
 plantEnergy:100
-plantsPerDay:100
+plantsPerDay:2
 
 animalType:1
-startAnimals:200
+startAnimals:2
 startEnergy:200
 energyLoss:40
 energyForReproduction:100

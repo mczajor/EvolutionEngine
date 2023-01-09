@@ -60,18 +60,23 @@ public class Simulation{
         Map<String, Integer> options = FileReader.byStream(path);
         for(Integer option : options.values()){
             if(option < 0){
+                System.err.println("Error: Invalid input");
                 throw new IllegalArgumentException();
             }
         }
         this.setVariables(options);
     }
     private void setVariables(Map<String, Integer> options) {
+        System.out.println("options: " + options.toString());
         this.width = options.get("width");
         this.height = options.get("height");
         this.map = switch(options.get("mapType")){
             case 0 -> new HellPortal(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
             case 1 -> new SphericalWorld(width, height, options.get("energyLoss"), options.get("reproductionThreshold"));
-            default -> throw new IllegalArgumentException();
+            default -> {
+                System.err.println("Invalid map type");
+                throw new IllegalArgumentException();
+            }
         };
 
         this.plantsPerDay = options.get("plantsPerDay");
@@ -79,11 +84,10 @@ public class Simulation{
         if(options.get("plantGrowthType") == 0){
             gardener = new NecrophobicGardener(this.map, width, height, options.get("startPlants"), options.get("plantEnergy"));
             underTaker = new InformantUnderTaker(this.map, gardener);
-        } else{
+        } else {
             gardener = new EquatorGardener(this.map, width, height, options.get("startPlants"), options.get("plantEnergy"));
             underTaker = new UnderTaker(this.map);
         }
-
         this.map.addUnderTaker(underTaker);
         this.map.addGardener(gardener);
 
@@ -96,6 +100,7 @@ public class Simulation{
         int maxGenomeMutations = options.get("maxGenomeMutations");
 
         for (int i = 0; i < options.get("startAnimals"); i++){
+            System.out.println("Chuj");
             AbstractAnimal animal = switch(animalType){
                 case 0 -> new DetermininisticAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
@@ -103,7 +108,10 @@ public class Simulation{
                 case 1 -> new CrazyAnimal(new MoveVector((int)(Math.random()*width), (int)(Math.random()*height)), this.map,
                         startEnergy, energyForReproduction,
                         genomeType, genomeLength,minGenomeMutations, maxGenomeMutations);
-                default -> throw new IllegalArgumentException();
+                default -> {
+                    System.err.println("Invalid animal type");
+                    throw new IllegalArgumentException();
+                }
             };
             if(map.place(animal)){
                 this.abstractAnimals.add(animal);
