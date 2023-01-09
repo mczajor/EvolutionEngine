@@ -132,8 +132,11 @@ public class MainSceneController {
         } catch (IOException e){
             this.showError("Plik nie istnieje albo nie ma uprawnien do odczytu");
             //System.err.println("chuj");
-        }   catch (IllegalArgumentException | NullPointerException e){
+        }   catch (IllegalArgumentException e){
             this.showError("Podane dane sa niepoprawne");
+            //System.err.println("chuj");
+        }   catch (NullPointerException e){
+            this.showError("Nie wybrane wszystkie opcje");
             //System.err.println("chuj");
         }
     }

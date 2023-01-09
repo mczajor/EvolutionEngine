@@ -30,7 +30,7 @@ public class Simulation{
         options.put("width", width);
         options.put("height", height);
 
-        options.put("gardenerType", gardenerType);
+        options.put("plantGrowthType", gardenerType);
         options.put("startPlants", startPlants);
         options.put("plantEnergy", plantEnergy);
         options.put("plantsPerDay", plantsPerDay);
