@@ -14,8 +14,8 @@ public class Simulation{
     private AbstractGardener gardener;
     private AbstractUnderTaker underTaker;
     private int plantsPerDay;
-    private final ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
-    private final Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
+    private ArrayList<AbstractAnimal> abstractAnimals = new ArrayList<>();
+    private Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
     private AbstractGenotype bestGenotype = null;
     private int bestGenotypeCount = 0;
     private int sleepTime;

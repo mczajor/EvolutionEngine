@@ -19,11 +19,11 @@ public abstract class AbstractAnimal implements IMapElement {
     protected final ArrayList<IPositionObserver> observers = new ArrayList<>();
     protected final int bornOn;
     protected boolean isDead = false;
-    protected static int energyForReproduction;
-    protected static int genoType;
-    public static Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
-    public static AbstractGenotype bestGenotype;
-    public static int bestGenotypeCount = 0;
+    protected  int energyForReproduction;
+    protected  int genoType;
+    public  Map<AbstractGenotype, Integer> genotypes = new HashMap<>();
+    public  AbstractGenotype bestGenotype;
+    public  int bestGenotypeCount = 0;
     protected Circle circle = new Circle();
     //Constructor for initial animals
     public AbstractAnimal(MoveVector position, IPositionObserver map, int startEnergy, int reproductionEnergy,int speciesGenotype, int genomeLength, int minGenomeMutations, int maxGenomeMutations){
